@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Company Uses More Data? | IT Company Data Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F4F1;
+  --panel:#FFFFFF;
+  --ink:#10202E;
+  --muted:#5B6B78;
+  --line:#D7DDD9;
+  --cobalt:#2446C7;
+  --cobalt-soft:#E3E9FB;
+  --amber:#E8A200;
+  --amber-soft:#FFF1CC;
+  --teal:#0E8C7F;
+  --radius:10px;
+  --head:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--body)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:20px;padding-right:20px}
+a{color:var(--cobalt)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.sr{position:absolute;left:-9999px}
+
+/* top bar */
+.top{background:var(--ink);color:#fff}
+.top-inner{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+.brand{margin:0;font:600 14px var(--body);opacity:.85}
+.top nav{display:flex;gap:18px;flex-wrap:wrap}
+.top nav a{color:#fff;text-decoration:none;font-size:14px;opacity:.8}
+.top nav a:hover{opacity:1;text-decoration:underline}
+
+/* hero */
+.hero{padding-top:48px;padding-bottom:20px}
+.kicker{margin:0 0 6px;color:var(--muted);font-weight:500}
+.hero h1{margin:0;font:800 clamp(2.2rem,6vw,4.4rem)/1.02 var(--head);letter-spacing:-.02em;max-width:16ch;max-width:22ch}
+.hero h1 .win{color:var(--cobalt)}
+.hero-sub{max-width:62ch;margin:14px 0 0;color:var(--muted);font-size:1.05rem}
+
+/* controls */
+.controls{padding-top:18px;padding-bottom:10px;display:grid;gap:16px}
+.ctl{display:flex;flex-direction:column;gap:6px}
+.ctl-label{font-size:13px;font-weight:600;color:var(--muted)}
+.ctl-row{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip,.seg button,.reset{font:500 14px var(--body);cursor:pointer}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 14px;border-radius:999px;transition:background .15s,border-color .15s}
+.chip:hover{border-color:var(--cobalt)}
+.chip[aria-checked="true"]{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:8px 14px;color:var(--ink)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-checked="true"]{background:var(--ink);color:#fff}
+select,input[type=search]{font:400 15px var(--body);padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);min-width:170px}
+.reset{border:1px solid var(--line);background:transparent;padding:8px 14px;border-radius:8px;color:var(--muted)}
+.reset:hover{color:var(--ink);border-color:var(--ink)}
+
+/* panels */
+.panel{margin-top:28px;padding-top:24px;padding-bottom:24px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);max-width:1040px}
+.panel.wrap{margin-left:auto;margin-right:auto}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+h2{margin:0;font:700 1.55rem var(--head);letter-spacing:-.01em}
+h3{margin:0 0 12px;font:700 1.05rem var(--head)}
+.muted{color:var(--muted);font-size:.95rem;margin:4px 0 14px}
+.inline{display:inline-block}
+
+/* ranking */
+.rank{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.rank li button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:120px 1fr 120px;gap:14px;align-items:center;width:100%;padding:8px 10px;border-radius:8px;cursor:pointer}
+.rank li button:hover{background:#F5F7F6}
+.rank li button:focus-visible{outline:3px solid var(--amber)}
+.rank li.sel button{background:var(--cobalt-soft)}
+.r-name{font-weight:600}
+.r-name small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.track{height:26px;background:#EAEEEC;border-radius:4px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--cobalt);border-radius:4px 0 0 4px;transition:width .5s cubic-bezier(.2,.7,.2,1);
+  -webkit-mask:repeating-linear-gradient(90deg,#000 0 var(--step,20px),transparent var(--step,20px) calc(var(--step,20px) + 2px));
+          mask:repeating-linear-gradient(90deg,#000 0 var(--step,20px),transparent var(--step,20px) calc(var(--step,20px) + 2px))}
+.first .fill{background:var(--amber)}
+.r-val{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.r-val small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.na .track{background:repeating-linear-gradient(135deg,#EEF1EF 0 6px,#E4E9E6 6px 12px)}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.kpi{border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi b{display:block;font:700 1.45rem var(--head);font-variant-numeric:tabular-nums}
+.kpi span{font-size:13px;color:var(--muted)}
+.kpi em{display:block;font-style:normal;font-size:12px;color:var(--teal);margin-top:2px}
+.kpi em.down{color:#B4442B}
+
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:8px;padding:16px}
+
+/* split */
+.split-bar{display:flex;height:34px;border-radius:6px;overflow:hidden;background:#EAEEEC}
+.split-bar div{display:flex;align-items:center;padding-left:10px;color:#fff;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;transition:width .5s}
+.s-cloud{background:var(--cobalt)}
+.s-prem{background:var(--teal)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:14px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+
+/* trend */
+.trend svg{width:100%;height:auto;display:block}
+.trend text{font:12px var(--body);fill:var(--muted)}
+.trend .gl{stroke:var(--line);stroke-width:1}
+.trend .line{fill:none;stroke:var(--cobalt);stroke-width:3;stroke-linejoin:round}
+.trend .ref{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 5}
+.trend circle{fill:#fff;stroke:var(--cobalt);stroke-width:3}
+.trend .val{fill:var(--ink);font-weight:600}
+
+/* compare */
+.vs{display:flex;gap:10px;align-items:center;color:var(--muted)}
+.cmp{display:grid;gap:14px;margin-top:10px}
+.cmp-row{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center}
+.cmp-row>b{font-weight:600;font-size:14px}
+.cmp-bars{display:grid;gap:5px}
+.cb{display:grid;grid-template-columns:1fr 110px;gap:10px;align-items:center}
+.cb .track{height:18px}
+.cb .fill{--step:100px;-webkit-mask:none;mask:none;border-radius:0 4px 4px 0}
+.cb.a .fill{background:var(--cobalt)}
+.cb.b .fill{background:var(--teal)}
+.cb.lead span{font-weight:700}
+.cb span{font-size:13px;font-variant-numeric:tabular-nums;text-align:right}
+.verdict{margin-top:6px;padding:12px 14px;background:var(--amber-soft);border-radius:8px;font-size:15px}
+
+/* table */
+.table-scroll{max-height:440px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:900px;font-size:14px}
+th,td{padding:8px 12px;text-align:right;white-space:nowrap}
+th:nth-child(-n+3),td:nth-child(-n+3){text-align:left}
+thead th{position:sticky;top:0;background:var(--ink);color:#fff;font-weight:600;cursor:pointer;user-select:none}
+thead th[aria-sort="ascending"]::after{content:" ▲";font-size:10px}
+thead th[aria-sort="descending"]::after{content:" ▼";font-size:10px}
+tbody tr:nth-child(even){background:#F7F9F8}
+td.nil{color:#A3AEB5}
+
+/* coverage */
+.cover{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 24px}
+.cv b{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.cv .track{height:10px;margin-top:5px}
+.cv .fill{--step:100px;-webkit-mask:none;mask:none;background:var(--teal);border-radius:4px}
+
+.foot{padding-top:28px;padding-bottom:48px;color:var(--muted);font-size:13px;max-width:1040px}
+
+@media (max-width:640px){
+  .rank li button{grid-template-columns:90px 1fr;grid-template-areas:"n v" "t t"}
+  .rank li .r-name{grid-area:n}.rank li .r-val{grid-area:v}.rank li .track{grid-area:t}
+  .cmp-row{grid-template-columns:1fr}
+  .panel{border-left:0;border-right:0;border-radius:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <p class="brand">Advanced Data Science Capstone</p>
+    <nav aria-label="Sections">
+      <a href="#ranking">Ranking</a>
+      <a href="#profile">Company profile</a>
+      <a href="#compare">Head-to-head</a>
+      <a href="#records">Records</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- HERO: the live answer -->
+<section class="hero wrap" aria-live="polite">
+  <p class="kicker">Which company uses more data?</p>
+  <h1 id="heroAnswer">Loading…</h1>
+  <p class="hero-sub" id="heroSub"></p>
+</section>
+
+<!-- CONTROLS -->
+<section class="controls wrap" aria-label="Controls">
+  <div class="ctl ctl-metric">
+    <span class="ctl-label" id="lblMetric">Measure</span>
+    <div class="chips" id="metricChips" role="radiogroup" aria-labelledby="lblMetric"></div>
+  </div>
+  <div class="ctl-row">
+    <div class="ctl">
+      <span class="ctl-label" id="lblAgg">Summarise as</span>
+      <div class="seg" id="aggSeg" role="radiogroup" aria-labelledby="lblAgg">
+        <button role="radio" data-agg="avg" aria-checked="true">Average</button>
+        <button role="radio" data-agg="median" aria-checked="false">Median</button>
+        <button role="radio" data-agg="max" aria-checked="false">Highest</button>
+      </div>
+    </div>
+    <label class="ctl">
+      <span class="ctl-label">Report quarter</span>
+      <select id="quarterSel">
+        <option value="all">Whole year 2025</option>
+        <option value="1">Q1 (Jan–Mar)</option>
+        <option value="2">Q2 (Apr–Jun)</option>
+        <option value="3">Q3 (Jul–Sep)</option>
+        <option value="4">Q4 (Oct–Dec)</option>
+      </select>
+    </label>
+    <label class="ctl">
+      <span class="ctl-label">Source of figure</span>
+      <select id="sourceSel"></select>
+    </label>
+    <button class="reset" id="resetBtn" type="button">Reset</button>
+  </div>
+</section>
+
+<!-- RANKING -->
+<section class="panel wrap" id="ranking">
+  <div class="panel-head">
+    <h2 id="rankTitle">Ranking</h2>
+    <p class="muted">Each block is 500 TB (or a fixed step for other measures). Click a company to open its profile.</p>
+  </div>
+  <ol class="rank" id="rankList"></ol>
+</section>
+
+<!-- PROFILE -->
+<section class="panel wrap" id="profile">
+  <div class="panel-head">
+    <h2>Company profile</h2>
+    <label class="inline">
+      <span class="sr">Choose company</span>
+      <select id="companySel"></select>
+    </label>
+  </div>
+  <p class="muted" id="profSeg"></p>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="two">
+    <div class="card">
+      <h3>Cloud vs on-premise storage</h3>
+      <div id="splitBox"></div>
+    </div>
+    <div class="card">
+      <h3 id="trendTitle">Quarterly trend</h3>
+      <div id="trendBox"></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section class="panel wrap" id="compare">
+  <div class="panel-head">
+    <h2>Head-to-head</h2>
+    <div class="vs">
+      <select id="cmpA" aria-label="First company"></select>
+      <span>vs</span>
+      <select id="cmpB" aria-label="Second company"></select>
+    </div>
+  </div>
+  <div id="cmpBox" class="cmp"></div>
+</section>
+
+<!-- RECORDS -->
+<section class="panel wrap" id="records">
+  <div class="panel-head">
+    <h2>Records</h2>
+    <input id="search" type="search" placeholder="Search company, segment or ID" aria-label="Search records">
+  </div>
+  <p class="muted" id="recCount"></p>
+  <div class="table-scroll">
+    <table id="tbl">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- DATA QUALITY -->
+<section class="panel wrap" id="quality">
+  <div class="panel-head">
+    <h2>How complete is the data?</h2>
+  </div>
+  <p class="muted">Share of records (after the filters above) that report each measure. Averages only use records that actually report a value, so low coverage means less certainty.</p>
+  <div class="cover" id="coverBox"></div>
+</section>
+</main>
+
+<footer class="wrap foot">
+  <p><strong>Downloads (needs the downloads folder beside this file):</strong>
+    <a href="downloads/it_company_data_cleaned.xlsx" download>Cleaned data (.xlsx)</a> ·
+    <a href="downloads/it_company_data_uncleaned.csv" download>Raw data (.csv)</a> ·
+    <a href="downloads/sandeep.ipynb" download>Jupyter notebook</a> ·
+    <a href="downloads/sandeepcapstone.pbix" download>Power BI file</a></p>
+  <p>Data: <code>it_company_data_cleaned.xlsx</code> (240 records, 10 companies, calendar year 2025), prepared with Python in Jupyter and Power BI. Figures are estimates from annual reports, company blogs and analyst or industry estimates.</p>
+</footer>
+
+<script>
+// Generated from it_company_data_cleaned.xlsx (240 records, 10 companies)
+const DATA = [{"Record_ID":"REC-0001","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-01-13","Data_Stored_TB":6699.8,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":279.08,"Monthly_Cloud_Cost_USD":243301.15,"Employees":137475.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0002","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-08-03","Data_Stored_TB":null,"Data_Processed_TB":1983.43,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":661.64,"Monthly_Cloud_Cost_USD":null,"Employees":99104.0,"Data_Center_Regions":40.0,"Source_Note":null},{"Record_ID":"REC-0003","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-10-02","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1740.51,"Monthly_Cloud_Cost_USD":null,"Employees":25916.0,"Data_Center_Regions":26.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0004","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-03-25","Data_Stored_TB":3394.61,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1912.24,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0005","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-04-28","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":36.0,"Source_Note":null},{"Record_ID":"REC-0006","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-08-08","Data_Stored_TB":null,"Data_Processed_TB":2565.88,"Cloud_Storage_TB":3081.68,"On_Premise_Storage_TB":2272.23,"Monthly_Cloud_Cost_USD":null,"Employees":115666.0,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0007","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-05-09","Data_Stored_TB":8742.6,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1033.72,"Monthly_Cloud_Cost_USD":null,"Employees":193659.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0008","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-11-24","Data_Stored_TB":4618.2,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1804.85,"Monthly_Cloud_Cost_USD":null,"Employees":223016.0,"Data_Center_Regions":17.0,"Source_Note":null},{"Record_ID":"REC-0009","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-02-13","Data_Stored_TB":6613.98,"Data_Processed_TB":6846.99,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":21.0,"Source_Note":null},{"Record_ID":"REC-0010","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-08-13","Data_Stored_TB":null,"Data_Processed_TB":1611.65,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":705.74,"Monthly_Cloud_Cost_USD":1772523.96,"Employees":65015.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0011","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-12-09","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":3478.46,"On_Premise_Storage_TB":2358.17,"Monthly_Cloud_Cost_USD":null,"Employees":97876.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0012","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-02-01","Data_Stored_TB":null,"Data_Processed_TB":5614.12,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":566.79,"Monthly_Cloud_Cost_USD":632018.06,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0013","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-02-17","Data_Stored_TB":8344.67,"Data_Processed_TB":1205.86,"Cloud_Storage_TB":5194.67,"On_Premise_Storage_TB":26.42,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":37.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0014","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-04-22","Data_Stored_TB":null,"Data_Processed_TB":473.66,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":26000.0,"Data_Center_Regions":6.0,"Source_Note":null},{"Record_ID":"REC-0015","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-07-26","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1577.89,"Monthly_Cloud_Cost_USD":null,"Employees":67570.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0016","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-08-23","Data_Stored_TB":2913.98,"Data_Processed_TB":null,"Cloud_Storage_TB":5976.77,"On_Premise_Storage_TB":1622.15,"Monthly_Cloud_Cost_USD":2333815.85,"Employees":69037.0,"Data_Center_Regions":12.0,"Source_Note":null},{"Record_ID":"REC-0017","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-11-10","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2636.82,"Monthly_Cloud_Cost_USD":297417.39,"Employees":199620.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0018","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-04-15","Data_Stored_TB":null,"Data_Processed_TB":3562.59,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":151.38,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0019","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-01-05","Data_Stored_TB":null,"Data_Processed_TB":3841.85,"Cloud_Storage_TB":3515.93,"On_Premise_Storage_TB":144.65,"Monthly_Cloud_Cost_USD":2248463.91,"Employees":240647.0,"Data_Center_Regions":8.0,"Source_Note":null},{"Record_ID":"REC-0020","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-11-14","Data_Stored_TB":6770.35,"Data_Processed_TB":6059.01,"Cloud_Storage_TB":5294.43,"On_Premise_Storage_TB":2774.97,"Monthly_Cloud_Cost_USD":null,"Employees":70055.0,"Data_Center_Regions":8.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0021","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-04-24","Data_Stored_TB":null,"Data_Processed_TB":2480.13,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":595.53,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":36.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0022","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-05-14","Data_Stored_TB":null,"Data_Processed_TB":4196.17,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1320.45,"Monthly_Cloud_Cost_USD":null,"Employees":54828.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0023","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-07-06","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":14.0,"Source_Note":null},{"Record_ID":"REC-0024","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-12-13","Data_Stored_TB":6758.4,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":120811.0,"Data_Center_Regions":34.0,"Source_Note":null},{"Record_ID":"REC-0025","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-12-04","Data_Stored_TB":null,"Data_Processed_TB":4663.78,"Cloud_Storage_TB":4919.62,"On_Premise_Storage_TB":2024.93,"Monthly_Cloud_Cost_USD":376911.37,"Employees":null,"Data_Center_Regions":31.0,"Source_Note":null},{"Record_ID":"REC-0026","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-04-10","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":4141.35,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1299714.8,"Employees":151120.0,"Data_Center_Regions":10.0,"Source_Note":null},{"Record_ID":"REC-0027","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-10-14","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":494.29,"Monthly_Cloud_Cost_USD":1130673.7,"Employees":172159.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0028","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-08-14","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":529.44,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":31.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0029","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-07-19","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":2313.27,"On_Premise_Storage_TB":909.87,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":36.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0030","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-05-20","Data_Stored_TB":3978.94,"Data_Processed_TB":4698.67,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0031","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-08-25","Data_Stored_TB":null,"Data_Processed_TB":1521.04,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2854.59,"Monthly_Cloud_Cost_USD":638156.11,"Employees":null,"Data_Center_Regions":5.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0032","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-11-30","Data_Stored_TB":458.3,"Data_Processed_TB":6649.8,"Cloud_Storage_TB":3746.95,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":72172.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0033","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-03-25","Data_Stored_TB":8686.01,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1202.03,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":21.0,"Source_Note":null},{"Record_ID":"REC-0034","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-06-27","Data_Stored_TB":null,"Data_Processed_TB":3566.43,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":334.51,"Monthly_Cloud_Cost_USD":null,"Employees":45105.0,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0035","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-10-03","Data_Stored_TB":null,"Data_Processed_TB":5130.63,"Cloud_Storage_TB":1967.71,"On_Premise_Storage_TB":278.26,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":26.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0036","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-04-04","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1676.26,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0037","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-08-18","Data_Stored_TB":7157.1,"Data_Processed_TB":2094.94,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1669.35,"Monthly_Cloud_Cost_USD":null,"Employees":91714.0,"Data_Center_Regions":19.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0038","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-03-03","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":1151.64,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":161445.0,"Data_Center_Regions":14.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0039","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-06-04","Data_Stored_TB":null,"Data_Processed_TB":929.75,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1920.85,"Monthly_Cloud_Cost_USD":265443.24,"Employees":79537.0,"Data_Center_Regions":30.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0040","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-05-10","Data_Stored_TB":null,"Data_Processed_TB":504.14,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":2373322.85,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0041","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-09-25","Data_Stored_TB":null,"Data_Processed_TB":4140.25,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":199.49,"Monthly_Cloud_Cost_USD":2369499.6,"Employees":60318.0,"Data_Center_Regions":7.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0042","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-02-08","Data_Stored_TB":null,"Data_Processed_TB":4176.99,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2114.9,"Monthly_Cloud_Cost_USD":187237.6,"Employees":null,"Data_Center_Regions":14.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0043","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-04-26","Data_Stored_TB":null,"Data_Processed_TB":5795.09,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1716.24,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0044","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-08-13","Data_Stored_TB":815.93,"Data_Processed_TB":null,"Cloud_Storage_TB":1539.69,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1471936.1,"Employees":181234.0,"Data_Center_Regions":38.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0045","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-11-30","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":4894.76,"On_Premise_Storage_TB":1236.88,"Monthly_Cloud_Cost_USD":1678632.44,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0046","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-01-19","Data_Stored_TB":null,"Data_Processed_TB":855.66,"Cloud_Storage_TB":5196.22,"On_Premise_Storage_TB":1636.93,"Monthly_Cloud_Cost_USD":null,"Employees":168219.0,"Data_Center_Regions":30.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0047","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-03-09","Data_Stored_TB":null,"Data_Processed_TB":6171.88,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2135.15,"Monthly_Cloud_Cost_USD":null,"Employees":111952.0,"Data_Center_Regions":9.0,"Source_Note":null},{"Record_ID":"REC-0048","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-09-13","Data_Stored_TB":null,"Data_Processed_TB":1950.3,"Cloud_Storage_TB":5882.46,"On_Premise_Storage_TB":1381.22,"Monthly_Cloud_Cost_USD":null,"Employees":200636.0,"Data_Center_Regions":19.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0049","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-05-17","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1350.71,"Monthly_Cloud_Cost_USD":null,"Employees":147456.0,"Data_Center_Regions":31.0,"Source_Note":null},{"Record_ID":"REC-0050","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-10-20","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":39.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0051","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-09-27","Data_Stored_TB":8202.93,"Data_Processed_TB":null,"Cloud_Storage_TB":5821.24,"On_Premise_Storage_TB":2908.23,"Monthly_Cloud_Cost_USD":null,"Employees":26054.0,"Data_Center_Regions":26.0,"Source_Note":null},{"Record_ID":"REC-0052","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-10-05","Data_Stored_TB":419.5,"Data_Processed_TB":4806.58,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1762688.17,"Employees":null,"Data_Center_Regions":21.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0053","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-05-31","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":4106.71,"On_Premise_Storage_TB":255.33,"Monthly_Cloud_Cost_USD":1553078.82,"Employees":null,"Data_Center_Regions":16.0,"Source_Note":null},{"Record_ID":"REC-0054","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-08-24","Data_Stored_TB":2372.41,"Data_Processed_TB":3283.51,"Cloud_Storage_TB":4081.78,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":70561.0,"Data_Center_Regions":14.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0055","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-05-02","Data_Stored_TB":null,"Data_Processed_TB":6949.21,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1947995.92,"Employees":null,"Data_Center_Regions":33.0,"Source_Note":null},{"Record_ID":"REC-0056","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-04-23","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":4101.09,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":156931.0,"Data_Center_Regions":7.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0057","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-03-31","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":5485.25,"On_Premise_Storage_TB":2477.58,"Monthly_Cloud_Cost_USD":null,"Employees":233169.0,"Data_Center_Regions":9.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0058","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-12-13","Data_Stored_TB":null,"Data_Processed_TB":5641.88,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1618.99,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":26.0,"Source_Note":null},{"Record_ID":"REC-0059","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-08-30","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":920.53,"Monthly_Cloud_Cost_USD":300523.08,"Employees":84787.0,"Data_Center_Regions":9.0,"Source_Note":null},{"Record_ID":"REC-0060","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-07-18","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":111985.0,"Data_Center_Regions":4.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0061","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-05-01","Data_Stored_TB":7713.51,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2905.26,"Monthly_Cloud_Cost_USD":238266.83,"Employees":null,"Data_Center_Regions":5.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0062","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-10-17","Data_Stored_TB":null,"Data_Processed_TB":1489.74,"Cloud_Storage_TB":2004.93,"On_Premise_Storage_TB":1796.03,"Monthly_Cloud_Cost_USD":2147431.25,"Employees":146614.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0063","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-01-08","Data_Stored_TB":3288.36,"Data_Processed_TB":159.68,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1274.46,"Monthly_Cloud_Cost_USD":null,"Employees":139542.0,"Data_Center_Regions":30.0,"Source_Note":null},{"Record_ID":"REC-0064","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-12-04","Data_Stored_TB":null,"Data_Processed_TB":266.5,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1481.0,"Monthly_Cloud_Cost_USD":192991.88,"Employees":89439.0,"Data_Center_Regions":10.0,"Source_Note":null},{"Record_ID":"REC-0065","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-10-08","Data_Stored_TB":null,"Data_Processed_TB":3737.37,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":193963.0,"Data_Center_Regions":29.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0066","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-08-21","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":1566.59,"On_Premise_Storage_TB":2066.73,"Monthly_Cloud_Cost_USD":2081112.0,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0067","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-10-15","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2168.76,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0068","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-02-25","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":19.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0069","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-06-23","Data_Stored_TB":3224.11,"Data_Processed_TB":3985.93,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":123920.0,"Data_Center_Regions":25.0,"Source_Note":null},{"Record_ID":"REC-0070","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-10-18","Data_Stored_TB":5406.39,"Data_Processed_TB":1131.28,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":24.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0071","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-12-14","Data_Stored_TB":null,"Data_Processed_TB":3712.19,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":183.25,"Monthly_Cloud_Cost_USD":null,"Employees":80876.0,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0072","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-03-08","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":4846.89,"On_Premise_Storage_TB":2231.28,"Monthly_Cloud_Cost_USD":56666.43,"Employees":null,"Data_Center_Regions":38.0,"Source_Note":null},{"Record_ID":"REC-0073","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-05-29","Data_Stored_TB":1125.04,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2760.91,"Monthly_Cloud_Cost_USD":null,"Employees":109975.0,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0074","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-06-20","Data_Stored_TB":7034.15,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":2039442.14,"Employees":43389.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0075","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-04-01","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2959.87,"Monthly_Cloud_Cost_USD":null,"Employees":44572.0,"Data_Center_Regions":32.0,"Source_Note":null},{"Record_ID":"REC-0076","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-05-21","Data_Stored_TB":null,"Data_Processed_TB":2207.33,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2498.46,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":4.0,"Source_Note":null},{"Record_ID":"REC-0077","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-06-14","Data_Stored_TB":null,"Data_Processed_TB":1098.48,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":439671.69,"Employees":119755.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0078","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-07-10","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1948.97,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":11.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0079","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-12-06","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0080","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-09-18","Data_Stored_TB":null,"Data_Processed_TB":6660.63,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":592.18,"Monthly_Cloud_Cost_USD":202141.06,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0081","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-03-09","Data_Stored_TB":5415.49,"Data_Processed_TB":null,"Cloud_Storage_TB":4863.81,"On_Premise_Storage_TB":150.2,"Monthly_Cloud_Cost_USD":1694143.68,"Employees":165063.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0082","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-08-29","Data_Stored_TB":8145.37,"Data_Processed_TB":6632.55,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1518.66,"Monthly_Cloud_Cost_USD":2416007.7,"Employees":215045.0,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0083","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-10-11","Data_Stored_TB":null,"Data_Processed_TB":5965.6,"Cloud_Storage_TB":549.06,"On_Premise_Storage_TB":832.92,"Monthly_Cloud_Cost_USD":2079306.33,"Employees":63205.0,"Data_Center_Regions":3.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0084","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-09-15","Data_Stored_TB":null,"Data_Processed_TB":6961.95,"Cloud_Storage_TB":1946.18,"On_Premise_Storage_TB":2520.75,"Monthly_Cloud_Cost_USD":null,"Employees":222517.0,"Data_Center_Regions":32.0,"Source_Note":null},{"Record_ID":"REC-0085","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-02-10","Data_Stored_TB":269.13,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":878.54,"Monthly_Cloud_Cost_USD":313402.38,"Employees":null,"Data_Center_Regions":31.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0086","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-10-02","Data_Stored_TB":null,"Data_Processed_TB":5043.88,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1071.39,"Monthly_Cloud_Cost_USD":1664284.54,"Employees":142228.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0087","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-01-11","Data_Stored_TB":null,"Data_Processed_TB":2738.83,"Cloud_Storage_TB":1559.22,"On_Premise_Storage_TB":1084.14,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":23.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0088","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-06-23","Data_Stored_TB":7340.23,"Data_Processed_TB":null,"Cloud_Storage_TB":2897.26,"On_Premise_Storage_TB":208.04,"Monthly_Cloud_Cost_USD":102089.64,"Employees":16483.0,"Data_Center_Regions":22.0,"Source_Note":null},{"Record_ID":"REC-0089","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-10-06","Data_Stored_TB":4313.26,"Data_Processed_TB":1378.17,"Cloud_Storage_TB":5179.72,"On_Premise_Storage_TB":2600.08,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":26.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0090","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-12-21","Data_Stored_TB":null,"Data_Processed_TB":624.15,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":557.76,"Monthly_Cloud_Cost_USD":809816.46,"Employees":178256.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0091","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-03-27","Data_Stored_TB":null,"Data_Processed_TB":5101.36,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":838.17,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":12.0,"Source_Note":null},{"Record_ID":"REC-0092","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-01-18","Data_Stored_TB":1223.45,"Data_Processed_TB":2595.98,"Cloud_Storage_TB":5699.33,"On_Premise_Storage_TB":2043.6,"Monthly_Cloud_Cost_USD":936313.31,"Employees":null,"Data_Center_Regions":27.0,"Source_Note":null},{"Record_ID":"REC-0093","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-05-08","Data_Stored_TB":8648.63,"Data_Processed_TB":3518.36,"Cloud_Storage_TB":5485.58,"On_Premise_Storage_TB":795.66,"Monthly_Cloud_Cost_USD":null,"Employees":186922.0,"Data_Center_Regions":14.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0094","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-03-30","Data_Stored_TB":null,"Data_Processed_TB":5683.07,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1635.67,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0095","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-04-13","Data_Stored_TB":7149.38,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":2211773.65,"Employees":null,"Data_Center_Regions":35.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0096","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-02-07","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":3128.29,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1473587.12,"Employees":118408.0,"Data_Center_Regions":9.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0097","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-03-24","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":5374.81,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0098","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-10-25","Data_Stored_TB":null,"Data_Processed_TB":6318.91,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":142.76,"Monthly_Cloud_Cost_USD":null,"Employees":156197.0,"Data_Center_Regions":38.0,"Source_Note":null},{"Record_ID":"REC-0099","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-09-12","Data_Stored_TB":null,"Data_Processed_TB":6698.72,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":131943.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0100","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-06-13","Data_Stored_TB":null,"Data_Processed_TB":958.82,"Cloud_Storage_TB":3114.13,"On_Premise_Storage_TB":1410.09,"Monthly_Cloud_Cost_USD":1129494.07,"Employees":18265.0,"Data_Center_Regions":26.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0101","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-10-23","Data_Stored_TB":6518.04,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":288.35,"Monthly_Cloud_Cost_USD":1268556.71,"Employees":157920.0,"Data_Center_Regions":5.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0102","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-12-01","Data_Stored_TB":null,"Data_Processed_TB":5937.85,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2296.29,"Monthly_Cloud_Cost_USD":122653.56,"Employees":154495.0,"Data_Center_Regions":37.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0103","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-09-16","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":3685.71,"On_Premise_Storage_TB":1193.83,"Monthly_Cloud_Cost_USD":null,"Employees":202909.0,"Data_Center_Regions":34.0,"Source_Note":null},{"Record_ID":"REC-0104","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-01-24","Data_Stored_TB":null,"Data_Processed_TB":3342.52,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2795.48,"Monthly_Cloud_Cost_USD":null,"Employees":225883.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0105","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-09-08","Data_Stored_TB":null,"Data_Processed_TB":165.63,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":161476.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0106","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-10-26","Data_Stored_TB":null,"Data_Processed_TB":4357.16,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":283639.85,"Employees":87232.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0107","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-09-14","Data_Stored_TB":null,"Data_Processed_TB":6116.08,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":50398.0,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0108","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-11-09","Data_Stored_TB":4409.2,"Data_Processed_TB":2124.57,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2120.87,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":19.0,"Source_Note":null},{"Record_ID":"REC-0109","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-07-14","Data_Stored_TB":null,"Data_Processed_TB":5737.72,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":255.51,"Monthly_Cloud_Cost_USD":null,"Employees":130587.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0110","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-03-12","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":5435.85,"On_Premise_Storage_TB":176.42,"Monthly_Cloud_Cost_USD":null,"Employees":31357.0,"Data_Center_Regions":2.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0111","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-09-02","Data_Stored_TB":null,"Data_Processed_TB":2282.12,"Cloud_Storage_TB":3931.18,"On_Premise_Storage_TB":1614.75,"Monthly_Cloud_Cost_USD":2283942.02,"Employees":114546.0,"Data_Center_Regions":27.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0112","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-01-20","Data_Stored_TB":null,"Data_Processed_TB":6502.76,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1639.04,"Monthly_Cloud_Cost_USD":null,"Employees":76522.0,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0113","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-04-06","Data_Stored_TB":null,"Data_Processed_TB":5545.84,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":180441.0,"Data_Center_Regions":32.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0114","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-05-14","Data_Stored_TB":null,"Data_Processed_TB":6680.54,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":127000.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0115","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-12-20","Data_Stored_TB":null,"Data_Processed_TB":2604.43,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1825.1,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0116","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-09-27","Data_Stored_TB":null,"Data_Processed_TB":2564.4,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":141404.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0117","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-02-16","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1397.89,"Monthly_Cloud_Cost_USD":null,"Employees":71704.0,"Data_Center_Regions":15.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0118","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-06-26","Data_Stored_TB":null,"Data_Processed_TB":6959.16,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":114.57,"Monthly_Cloud_Cost_USD":null,"Employees":115195.0,"Data_Center_Regions":30.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0119","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-12-16","Data_Stored_TB":null,"Data_Processed_TB":974.28,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1191.31,"Monthly_Cloud_Cost_USD":2088705.81,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0120","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-05-07","Data_Stored_TB":4199.56,"Data_Processed_TB":null,"Cloud_Storage_TB":4604.67,"On_Premise_Storage_TB":2432.24,"Monthly_Cloud_Cost_USD":609259.07,"Employees":31449.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0121","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-05-06","Data_Stored_TB":null,"Data_Processed_TB":3100.79,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":181300.0,"Data_Center_Regions":17.0,"Source_Note":null},{"Record_ID":"REC-0122","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-04-24","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2042.68,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":28.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0123","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-07-12","Data_Stored_TB":null,"Data_Processed_TB":5952.92,"Cloud_Storage_TB":5152.37,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":151089.0,"Data_Center_Regions":17.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0124","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-11-28","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":4984.97,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":108473.41,"Employees":null,"Data_Center_Regions":15.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0125","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-06-05","Data_Stored_TB":8617.48,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":519237.73,"Employees":89309.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0126","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-06-07","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1124.7,"Monthly_Cloud_Cost_USD":123831.47,"Employees":199314.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0127","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-06-01","Data_Stored_TB":null,"Data_Processed_TB":1648.63,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1025.94,"Monthly_Cloud_Cost_USD":null,"Employees":133606.0,"Data_Center_Regions":12.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0128","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-09-08","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":251.25,"On_Premise_Storage_TB":2836.66,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":11.0,"Source_Note":null},{"Record_ID":"REC-0129","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-07-11","Data_Stored_TB":null,"Data_Processed_TB":4334.81,"Cloud_Storage_TB":3972.74,"On_Premise_Storage_TB":39.7,"Monthly_Cloud_Cost_USD":null,"Employees":145440.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0130","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-04-02","Data_Stored_TB":1052.45,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1202.75,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0131","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-02-17","Data_Stored_TB":null,"Data_Processed_TB":3891.28,"Cloud_Storage_TB":4231.93,"On_Premise_Storage_TB":1313.05,"Monthly_Cloud_Cost_USD":1418983.0,"Employees":239564.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0132","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-05-19","Data_Stored_TB":514.4,"Data_Processed_TB":null,"Cloud_Storage_TB":3402.88,"On_Premise_Storage_TB":554.48,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":6.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0133","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-05-04","Data_Stored_TB":null,"Data_Processed_TB":3806.91,"Cloud_Storage_TB":4545.88,"On_Premise_Storage_TB":2375.68,"Monthly_Cloud_Cost_USD":null,"Employees":30607.0,"Data_Center_Regions":6.0,"Source_Note":null},{"Record_ID":"REC-0134","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-11-01","Data_Stored_TB":null,"Data_Processed_TB":1949.62,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1668.05,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0135","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-05-18","Data_Stored_TB":null,"Data_Processed_TB":1122.22,"Cloud_Storage_TB":1934.24,"On_Premise_Storage_TB":2830.02,"Monthly_Cloud_Cost_USD":null,"Employees":31799.0,"Data_Center_Regions":29.0,"Source_Note":null},{"Record_ID":"REC-0136","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-09-20","Data_Stored_TB":3731.59,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":56.78,"Monthly_Cloud_Cost_USD":975620.9,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0137","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-03-28","Data_Stored_TB":null,"Data_Processed_TB":1915.43,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2352.35,"Monthly_Cloud_Cost_USD":636732.35,"Employees":168848.0,"Data_Center_Regions":14.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0138","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-06-05","Data_Stored_TB":null,"Data_Processed_TB":4360.34,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":163128.0,"Data_Center_Regions":32.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0139","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-05-30","Data_Stored_TB":null,"Data_Processed_TB":3462.5,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2453.15,"Monthly_Cloud_Cost_USD":2330847.21,"Employees":160248.0,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0140","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-08-13","Data_Stored_TB":null,"Data_Processed_TB":5942.13,"Cloud_Storage_TB":4054.22,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":211851.0,"Data_Center_Regions":40.0,"Source_Note":null},{"Record_ID":"REC-0141","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-10-01","Data_Stored_TB":null,"Data_Processed_TB":305.52,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1789.58,"Monthly_Cloud_Cost_USD":null,"Employees":179245.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0142","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-06-19","Data_Stored_TB":null,"Data_Processed_TB":786.31,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1682.82,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":39.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0143","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-09-05","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":30.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0144","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-12-30","Data_Stored_TB":null,"Data_Processed_TB":4553.39,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":746.86,"Monthly_Cloud_Cost_USD":null,"Employees":65779.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0145","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-07-22","Data_Stored_TB":null,"Data_Processed_TB":3174.55,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":2023737.17,"Employees":null,"Data_Center_Regions":25.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0146","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-02-28","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1056.82,"Monthly_Cloud_Cost_USD":null,"Employees":214875.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0147","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-03-02","Data_Stored_TB":2223.3,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":430.84,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":13.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0148","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-03-13","Data_Stored_TB":null,"Data_Processed_TB":4354.9,"Cloud_Storage_TB":2933.42,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":133902.0,"Data_Center_Regions":30.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0149","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-01-16","Data_Stored_TB":7183.34,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2322.19,"Monthly_Cloud_Cost_USD":1378818.2,"Employees":34938.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0150","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-10-07","Data_Stored_TB":null,"Data_Processed_TB":761.79,"Cloud_Storage_TB":1821.37,"On_Premise_Storage_TB":1360.2,"Monthly_Cloud_Cost_USD":1103284.06,"Employees":208327.0,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0151","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-11-20","Data_Stored_TB":null,"Data_Processed_TB":1017.68,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0152","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-07-30","Data_Stored_TB":null,"Data_Processed_TB":6075.98,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":987824.87,"Employees":170780.0,"Data_Center_Regions":26.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0153","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-07-26","Data_Stored_TB":null,"Data_Processed_TB":6147.36,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0154","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-08-08","Data_Stored_TB":null,"Data_Processed_TB":5806.99,"Cloud_Storage_TB":3306.5,"On_Premise_Storage_TB":1466.31,"Monthly_Cloud_Cost_USD":2236445.1,"Employees":null,"Data_Center_Regions":31.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0155","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-08-22","Data_Stored_TB":null,"Data_Processed_TB":1456.11,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2799.52,"Monthly_Cloud_Cost_USD":null,"Employees":26606.0,"Data_Center_Regions":5.0,"Source_Note":null},{"Record_ID":"REC-0156","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-12-25","Data_Stored_TB":null,"Data_Processed_TB":4605.62,"Cloud_Storage_TB":1319.86,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1118216.52,"Employees":187346.0,"Data_Center_Regions":10.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0157","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-07-16","Data_Stored_TB":895.05,"Data_Processed_TB":2604.55,"Cloud_Storage_TB":865.92,"On_Premise_Storage_TB":1931.9,"Monthly_Cloud_Cost_USD":1330965.61,"Employees":164991.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0158","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-07-30","Data_Stored_TB":null,"Data_Processed_TB":6026.74,"Cloud_Storage_TB":883.08,"On_Premise_Storage_TB":1164.42,"Monthly_Cloud_Cost_USD":793114.13,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0159","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-11-08","Data_Stored_TB":null,"Data_Processed_TB":5937.14,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2248.57,"Monthly_Cloud_Cost_USD":1618962.74,"Employees":134731.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0160","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-09-28","Data_Stored_TB":8009.65,"Data_Processed_TB":6908.83,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1274.17,"Monthly_Cloud_Cost_USD":1909187.59,"Employees":9375.0,"Data_Center_Regions":2.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0161","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-07-23","Data_Stored_TB":null,"Data_Processed_TB":5381.41,"Cloud_Storage_TB":4225.77,"On_Premise_Storage_TB":1928.8,"Monthly_Cloud_Cost_USD":null,"Employees":25715.0,"Data_Center_Regions":36.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0162","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-11-21","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":2653.04,"On_Premise_Storage_TB":276.91,"Monthly_Cloud_Cost_USD":null,"Employees":19425.0,"Data_Center_Regions":13.0,"Source_Note":null},{"Record_ID":"REC-0163","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-12-26","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2347.75,"Monthly_Cloud_Cost_USD":1835010.24,"Employees":207225.0,"Data_Center_Regions":29.0,"Source_Note":null},{"Record_ID":"REC-0164","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-05-15","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2580.89,"Monthly_Cloud_Cost_USD":645239.04,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0165","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-01-23","Data_Stored_TB":7742.33,"Data_Processed_TB":3328.76,"Cloud_Storage_TB":5525.35,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":176888.0,"Data_Center_Regions":16.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0166","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-05-19","Data_Stored_TB":null,"Data_Processed_TB":2641.02,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2944.61,"Monthly_Cloud_Cost_USD":null,"Employees":226471.0,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0167","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-07-08","Data_Stored_TB":null,"Data_Processed_TB":5502.33,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2916.14,"Monthly_Cloud_Cost_USD":null,"Employees":204355.0,"Data_Center_Regions":2.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0168","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-10-05","Data_Stored_TB":null,"Data_Processed_TB":6146.53,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2550.04,"Monthly_Cloud_Cost_USD":520933.99,"Employees":115052.0,"Data_Center_Regions":11.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0169","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-09-24","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":618.68,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":178655.0,"Data_Center_Regions":18.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0170","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-06-12","Data_Stored_TB":4129.54,"Data_Processed_TB":null,"Cloud_Storage_TB":698.39,"On_Premise_Storage_TB":1408.84,"Monthly_Cloud_Cost_USD":null,"Employees":59430.0,"Data_Center_Regions":31.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0171","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-03-22","Data_Stored_TB":null,"Data_Processed_TB":5793.39,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2139.25,"Monthly_Cloud_Cost_USD":996648.71,"Employees":83339.0,"Data_Center_Regions":3.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0172","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-10-09","Data_Stored_TB":null,"Data_Processed_TB":758.26,"Cloud_Storage_TB":121.14,"On_Premise_Storage_TB":2474.55,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":18.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0173","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-11-27","Data_Stored_TB":4046.54,"Data_Processed_TB":5938.56,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2773.91,"Monthly_Cloud_Cost_USD":null,"Employees":12728.0,"Data_Center_Regions":13.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0174","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-05-21","Data_Stored_TB":2590.71,"Data_Processed_TB":290.81,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1247.74,"Monthly_Cloud_Cost_USD":null,"Employees":40975.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0175","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-07-15","Data_Stored_TB":null,"Data_Processed_TB":5480.97,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":978.38,"Monthly_Cloud_Cost_USD":804005.14,"Employees":239819.0,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0176","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-04-30","Data_Stored_TB":8768.42,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":186.61,"Monthly_Cloud_Cost_USD":null,"Employees":98009.0,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0177","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-10-30","Data_Stored_TB":null,"Data_Processed_TB":2494.19,"Cloud_Storage_TB":3400.5,"On_Premise_Storage_TB":2435.0,"Monthly_Cloud_Cost_USD":1359890.26,"Employees":133564.0,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0178","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-09-27","Data_Stored_TB":null,"Data_Processed_TB":6429.38,"Cloud_Storage_TB":2077.52,"On_Premise_Storage_TB":2535.97,"Monthly_Cloud_Cost_USD":158294.35,"Employees":158776.0,"Data_Center_Regions":35.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0179","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-12-27","Data_Stored_TB":null,"Data_Processed_TB":2389.1,"Cloud_Storage_TB":861.89,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":37.0,"Source_Note":null},{"Record_ID":"REC-0180","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-03-31","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":16.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0181","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-06-19","Data_Stored_TB":6733.56,"Data_Processed_TB":null,"Cloud_Storage_TB":5317.66,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":7987.0,"Data_Center_Regions":6.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0182","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-01-01","Data_Stored_TB":null,"Data_Processed_TB":6785.26,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1138.54,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":12.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0183","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-05-31","Data_Stored_TB":null,"Data_Processed_TB":6664.05,"Cloud_Storage_TB":5333.19,"On_Premise_Storage_TB":2201.32,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Company blog"},{"Record_ID":"REC-0184","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-08-11","Data_Stored_TB":1498.22,"Data_Processed_TB":6822.07,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":710992.45,"Employees":18011.0,"Data_Center_Regions":37.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0185","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-07-04","Data_Stored_TB":133.96,"Data_Processed_TB":null,"Cloud_Storage_TB":2907.95,"On_Premise_Storage_TB":529.08,"Monthly_Cloud_Cost_USD":null,"Employees":35279.0,"Data_Center_Regions":32.0,"Source_Note":null},{"Record_ID":"REC-0186","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-02-16","Data_Stored_TB":null,"Data_Processed_TB":6204.17,"Cloud_Storage_TB":1160.17,"On_Premise_Storage_TB":804.62,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0187","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-07-31","Data_Stored_TB":null,"Data_Processed_TB":473.84,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2067.46,"Monthly_Cloud_Cost_USD":1436058.58,"Employees":129849.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0188","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-10-20","Data_Stored_TB":null,"Data_Processed_TB":6647.32,"Cloud_Storage_TB":1078.63,"On_Premise_Storage_TB":2917.05,"Monthly_Cloud_Cost_USD":116262.99,"Employees":184077.0,"Data_Center_Regions":40.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0189","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-02-14","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":2776.04,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1956397.3,"Employees":113643.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0190","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-10-16","Data_Stored_TB":null,"Data_Processed_TB":6166.94,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1467.04,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":4.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0191","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-01-26","Data_Stored_TB":null,"Data_Processed_TB":190.62,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2577.54,"Monthly_Cloud_Cost_USD":null,"Employees":207907.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0192","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-04-07","Data_Stored_TB":null,"Data_Processed_TB":5328.48,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1271920.24,"Employees":null,"Data_Center_Regions":38.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0193","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-01-30","Data_Stored_TB":null,"Data_Processed_TB":401.39,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1525.28,"Monthly_Cloud_Cost_USD":1706124.16,"Employees":null,"Data_Center_Regions":13.0,"Source_Note":null},{"Record_ID":"REC-0194","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-06-29","Data_Stored_TB":null,"Data_Processed_TB":4837.51,"Cloud_Storage_TB":213.33,"On_Premise_Storage_TB":505.46,"Monthly_Cloud_Cost_USD":null,"Employees":64011.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0195","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-08-31","Data_Stored_TB":null,"Data_Processed_TB":1253.74,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2133.92,"Monthly_Cloud_Cost_USD":null,"Employees":96412.0,"Data_Center_Regions":15.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0196","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-11-16","Data_Stored_TB":3634.66,"Data_Processed_TB":6996.03,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1834.97,"Monthly_Cloud_Cost_USD":null,"Employees":172928.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0197","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-04-07","Data_Stored_TB":1434.37,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":242741.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0198","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-12-29","Data_Stored_TB":8953.31,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":757485.12,"Employees":null,"Data_Center_Regions":13.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0199","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-05-13","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":237480.0,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0200","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-03-02","Data_Stored_TB":null,"Data_Processed_TB":4105.84,"Cloud_Storage_TB":2859.71,"On_Premise_Storage_TB":2605.14,"Monthly_Cloud_Cost_USD":null,"Employees":19172.0,"Data_Center_Regions":14.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0201","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-08-23","Data_Stored_TB":null,"Data_Processed_TB":611.64,"Cloud_Storage_TB":3804.64,"On_Premise_Storage_TB":192.88,"Monthly_Cloud_Cost_USD":691084.38,"Employees":156068.0,"Data_Center_Regions":33.0,"Source_Note":null},{"Record_ID":"REC-0202","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-11-21","Data_Stored_TB":null,"Data_Processed_TB":6759.03,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":61.95,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":2.0,"Source_Note":null},{"Record_ID":"REC-0203","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-06-09","Data_Stored_TB":null,"Data_Processed_TB":3548.19,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":23.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0204","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-03-26","Data_Stored_TB":null,"Data_Processed_TB":182.92,"Cloud_Storage_TB":1306.58,"On_Premise_Storage_TB":523.57,"Monthly_Cloud_Cost_USD":1780664.12,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0205","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-01-25","Data_Stored_TB":null,"Data_Processed_TB":5861.03,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":184762.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0206","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-05-19","Data_Stored_TB":null,"Data_Processed_TB":1003.29,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":370.85,"Monthly_Cloud_Cost_USD":null,"Employees":208937.0,"Data_Center_Regions":14.0,"Source_Note":null},{"Record_ID":"REC-0207","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-06-01","Data_Stored_TB":null,"Data_Processed_TB":1493.47,"Cloud_Storage_TB":2017.09,"On_Premise_Storage_TB":57.99,"Monthly_Cloud_Cost_USD":null,"Employees":134526.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0208","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-05-12","Data_Stored_TB":null,"Data_Processed_TB":2107.35,"Cloud_Storage_TB":347.98,"On_Premise_Storage_TB":2559.7,"Monthly_Cloud_Cost_USD":null,"Employees":116672.0,"Data_Center_Regions":8.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0209","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-06-18","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1214.32,"Monthly_Cloud_Cost_USD":null,"Employees":227998.0,"Data_Center_Regions":28.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0210","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-03-23","Data_Stored_TB":null,"Data_Processed_TB":4004.16,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":39250.0,"Data_Center_Regions":9.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0211","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-02-02","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0212","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-09-04","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":182.61,"Monthly_Cloud_Cost_USD":null,"Employees":228312.0,"Data_Center_Regions":33.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0213","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-05-23","Data_Stored_TB":548.12,"Data_Processed_TB":3875.94,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1355.33,"Monthly_Cloud_Cost_USD":1123199.62,"Employees":null,"Data_Center_Regions":8.0,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0214","Company":"Microsoft","Industry_Segment":"Cloud & Software","Report_Date":"2025-10-13","Data_Stored_TB":4986.98,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1970.7,"Monthly_Cloud_Cost_USD":null,"Employees":221350.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0215","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-08-31","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1908.31,"Monthly_Cloud_Cost_USD":null,"Employees":189050.0,"Data_Center_Regions":12.0,"Source_Note":null},{"Record_ID":"REC-0216","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-02-24","Data_Stored_TB":2363.17,"Data_Processed_TB":6515.0,"Cloud_Storage_TB":1332.76,"On_Premise_Storage_TB":341.14,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":30.0,"Source_Note":null},{"Record_ID":"REC-0217","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-09-16","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1459.14,"Monthly_Cloud_Cost_USD":1732626.1,"Employees":196494.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0218","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-06-14","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1041.72,"Monthly_Cloud_Cost_USD":1137585.81,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0219","Company":"IBM","Industry_Segment":"Enterprise IT","Report_Date":"2025-12-31","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1628715.11,"Employees":null,"Data_Center_Regions":9.0,"Source_Note":null},{"Record_ID":"REC-0220","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-10-26","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2428.75,"Monthly_Cloud_Cost_USD":958367.08,"Employees":180703.0,"Data_Center_Regions":12.0,"Source_Note":null},{"Record_ID":"REC-0221","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-03-16","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":1409093.61,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0222","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-12-21","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":180.33,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0223","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-04-11","Data_Stored_TB":7007.71,"Data_Processed_TB":null,"Cloud_Storage_TB":493.09,"On_Premise_Storage_TB":2210.54,"Monthly_Cloud_Cost_USD":null,"Employees":74268.0,"Data_Center_Regions":39.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0224","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-12-30","Data_Stored_TB":8443.7,"Data_Processed_TB":1118.24,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1992.43,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":22.0,"Source_Note":"Company blog"},{"Record_ID":"REC-0225","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-02-04","Data_Stored_TB":7097.7,"Data_Processed_TB":2940.72,"Cloud_Storage_TB":2128.95,"On_Premise_Storage_TB":1006.58,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0226","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-05-04","Data_Stored_TB":null,"Data_Processed_TB":6434.32,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1156.49,"Monthly_Cloud_Cost_USD":null,"Employees":194785.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0227","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-09-07","Data_Stored_TB":null,"Data_Processed_TB":1387.96,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1608.95,"Monthly_Cloud_Cost_USD":1679134.46,"Employees":184674.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0228","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-11-28","Data_Stored_TB":7369.11,"Data_Processed_TB":1118.59,"Cloud_Storage_TB":4315.37,"On_Premise_Storage_TB":181.72,"Monthly_Cloud_Cost_USD":null,"Employees":64675.0,"Data_Center_Regions":26.0,"Source_Note":null},{"Record_ID":"REC-0229","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-08-10","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":4335.7,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":248282.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0230","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-08-13","Data_Stored_TB":null,"Data_Processed_TB":264.19,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2551.41,"Monthly_Cloud_Cost_USD":2400734.32,"Employees":null,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0231","Company":"Google","Industry_Segment":"Search & Cloud","Report_Date":"2025-03-05","Data_Stored_TB":null,"Data_Processed_TB":4196.75,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2229.46,"Monthly_Cloud_Cost_USD":null,"Employees":228204.0,"Data_Center_Regions":12.0,"Source_Note":null},{"Record_ID":"REC-0232","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-04-10","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2021.62,"Monthly_Cloud_Cost_USD":null,"Employees":132714.0,"Data_Center_Regions":null,"Source_Note":null},{"Record_ID":"REC-0233","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-02-21","Data_Stored_TB":2637.72,"Data_Processed_TB":2258.61,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":null,"Monthly_Cloud_Cost_USD":null,"Employees":117278.0,"Data_Center_Regions":22.0,"Source_Note":null},{"Record_ID":"REC-0234","Company":"Oracle","Industry_Segment":"Enterprise Software","Report_Date":"2025-05-22","Data_Stored_TB":7576.98,"Data_Processed_TB":2354.36,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2328.81,"Monthly_Cloud_Cost_USD":null,"Employees":225670.0,"Data_Center_Regions":10.0,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0235","Company":"Amazon","Industry_Segment":"Cloud & E-commerce","Report_Date":"2025-02-08","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":129.24,"Monthly_Cloud_Cost_USD":null,"Employees":128759.0,"Data_Center_Regions":25.0,"Source_Note":null},{"Record_ID":"REC-0236","Company":"Apple","Industry_Segment":"Consumer Technology","Report_Date":"2025-03-10","Data_Stored_TB":null,"Data_Processed_TB":679.35,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":2058.8,"Monthly_Cloud_Cost_USD":1121088.91,"Employees":null,"Data_Center_Regions":32.0,"Source_Note":"Annual report"},{"Record_ID":"REC-0237","Company":"Meta","Industry_Segment":"Social Media","Report_Date":"2025-09-07","Data_Stored_TB":null,"Data_Processed_TB":2617.57,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":1176.52,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Industry estimate"},{"Record_ID":"REC-0238","Company":"Cisco","Industry_Segment":"Networking","Report_Date":"2025-10-06","Data_Stored_TB":null,"Data_Processed_TB":null,"Cloud_Storage_TB":5394.45,"On_Premise_Storage_TB":1559.66,"Monthly_Cloud_Cost_USD":null,"Employees":232467.0,"Data_Center_Regions":null,"Source_Note":"Annual report"},{"Record_ID":"REC-0239","Company":"Salesforce","Industry_Segment":"Cloud Software","Report_Date":"2025-03-13","Data_Stored_TB":4015.1,"Data_Processed_TB":585.76,"Cloud_Storage_TB":943.93,"On_Premise_Storage_TB":1099.42,"Monthly_Cloud_Cost_USD":null,"Employees":null,"Data_Center_Regions":null,"Source_Note":"Analyst estimate"},{"Record_ID":"REC-0240","Company":"NVIDIA","Industry_Segment":"AI & Computing","Report_Date":"2025-04-18","Data_Stored_TB":null,"Data_Processed_TB":5841.89,"Cloud_Storage_TB":null,"On_Premise_Storage_TB":500.16,"Monthly_Cloud_Cost_USD":2228086.2,"Employees":48605.0,"Data_Center_Regions":35.0,"Source_Note":null}];
+
+</script>
+<script>
+/* Which Company Uses More Data? – interactive logic (uses DATA from data.js) */
+const METRICS = [
+  {key:'combo', label:'Stored + processed', unit:'TB', step:500},
+  {key:'Data_Stored_TB', label:'Data stored', unit:'TB', step:500},
+  {key:'Data_Processed_TB', label:'Data processed', unit:'TB', step:500},
+  {key:'Cloud_Storage_TB', label:'Cloud storage', unit:'TB', step:500},
+  {key:'On_Premise_Storage_TB', label:'On-premise storage', unit:'TB', step:250},
+  {key:'Monthly_Cloud_Cost_USD', label:'Monthly cloud cost', unit:'USD', step:250000},
+  {key:'Employees', label:'Employees', unit:'', step:25000},
+  {key:'Data_Center_Regions', label:'Data-centre regions', unit:'', step:5}
+];
+const REAL = METRICS.filter(m => m.key !== 'combo');
+const AGG_NAME = {avg:'average', median:'median', max:'highest reported'};
+const DEFAULTS = {metric:'combo', agg:'avg', quarter:'all', source:'all', company:null, a:null, b:null, search:'', sort:{key:'Record_ID', dir:1}};
+const $ = id => document.getElementById(id);
+const state = JSON.parse(JSON.stringify(DEFAULTS));
+const COMPANIES = [...new Set(DATA.map(r => r.Company))].sort();
+const SEGMENT = Object.fromEntries(DATA.map(r => [r.Company, r.Industry_Segment]));
+const SOURCES = [...new Set(DATA.map(r => r.Source_Note).filter(Boolean))].sort();
+
+/* ---------- helpers ---------- */
+const metricOf = k => METRICS.find(m => m.key === k);
+const quarterOf = d => Math.floor((+d.slice(5, 7) - 1) / 3) + 1;
+function rows() {
+  return DATA.filter(r =>
+    (state.quarter === 'all' || quarterOf(r.Report_Date) === +state.quarter) &&
+    (state.source === 'all' || r.Source_Note === state.source));
+}
+function summarise(list, key, agg) {
+  const v = list.map(r => r[key]).filter(x => x != null).sort((a, b) => a - b);
+  if (!v.length) return null;
+  if (agg === 'max') return v[v.length - 1];
+  if (agg === 'median') { const m = v.length >> 1; return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2; }
+  return v.reduce((a, b) => a + b, 0) / v.length;
+}
+function valueFor(list, key, agg) {
+  if (key !== 'combo') return summarise(list, key, agg);
+  const s = summarise(list, 'Data_Stored_TB', agg), p = summarise(list, 'Data_Processed_TB', agg);
+  return s == null && p == null ? null : (s || 0) + (p || 0);
+}
+function countFor(list, key) {
+  if (key === 'combo') return list.filter(r => r.Data_Stored_TB != null || r.Data_Processed_TB != null).length;
+  return list.filter(r => r[key] != null).length;
+}
+function fmt(v, key, short) {
+  if (v == null) return 'No data';
+  if (key === 'Monthly_Cloud_Cost_USD') return '$' + (v / 1e6).toFixed(2) + 'M';
+  if (key === 'Employees') return Math.round(v).toLocaleString('en-US');
+  if (key === 'Data_Center_Regions') return Math.round(v).toString();
+  return Math.round(v).toLocaleString('en-US') + (short ? '' : ' TB');
+}
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+
+/* ---------- ranking + hero ---------- */
+function ranking() {
+  const list = rows(), m = metricOf(state.metric);
+  const out = COMPANIES.map(c => {
+    const rs = list.filter(r => r.Company === c);
+    return {c, v: valueFor(rs, state.metric, state.agg), n: countFor(rs, state.metric)};
+  }).sort((a, b) => (b.v ?? -1) - (a.v ?? -1));
+  return {out, m};
+}
+
+function renderHero(out, m) {
+  const top = out[0], second = out[1];
+  const scope = (state.quarter === 'all' ? 'in 2025' : 'in Q' + state.quarter + ' 2025');
+  if (top.v == null) {
+    $('heroAnswer').textContent = 'No data for these filters';
+    $('heroSub').textContent = 'Try a different quarter or source.';
+    return;
+  }
+  $('heroAnswer').innerHTML = `<span class="win">${top.c}</span> leads on ${m.label.toLowerCase()}`;
+  const lead = second && second.v ? ((top.v / second.v - 1) * 100) : null;
+  const leadTxt = lead != null ? `${lead.toFixed(1)}% ahead of ${second.c}` : '';
+  $('heroSub').textContent =
+    `${top.c} has the ${AGG_NAME[state.agg]} ${m.label.toLowerCase()} ${scope}: ${fmt(top.v, state.metric)}` +
+    (leadTxt ? `, ${leadTxt}` : '') + `. Based on ${top.n} reporting record${top.n === 1 ? '' : 's'}; the gap can change with the measure, so try the other chips.`;
+}
+
+function renderRank() {
+  const {out, m} = ranking();
+  renderHero(out, m);
+  $('rankTitle').textContent = `${m.label} by company (${AGG_NAME[state.agg]})`;
+  const max = Math.max(...out.map(o => o.v || 0), 1);
+  const ul = $('rankList'); ul.innerHTML = '';
+  out.forEach((o, i) => {
+    const li = el('li', (i === 0 && o.v != null ? 'first ' : '') + (o.c === state.company ? 'sel ' : '') + (o.v == null ? 'na' : ''));
+    const b = el('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', `${o.c}, ${fmt(o.v, state.metric)}. Open profile`);
+    b.innerHTML = `<span class="r-name">${o.c}<small>${SEGMENT[o.c]}</small></span>
+      <span class="track"><span class="fill" style="--step:${Math.max(6, 0)}px"></span></span>
+      <span class="r-val">${fmt(o.v, state.metric, true)}<small>${o.n} record${o.n === 1 ? '' : 's'}</small></span>`;
+    b.onclick = () => { state.company = o.c; renderAll(); $('profile').scrollIntoView({behavior:'smooth', block:'start'}); };
+    li.appendChild(b); ul.appendChild(li);
+    // block size: one block = m.step units, scaled to the bar width
+    const fill = b.querySelector('.fill'), track = b.querySelector('.track');
+    requestAnimationFrame(() => {
+      const w = track.clientWidth || 400;
+      const blockPx = Math.max(4, (m.step / max) * w - 2);
+      fill.style.setProperty('--step', blockPx + 'px');
+      fill.style.width = ((o.v || 0) / max * 100) + '%';
+    });
+  });
+}
+
+/* ---------- profile ---------- */
+function renderProfile() {
+  const c = state.company, list = rows(), rs = list.filter(r => r.Company === c);
+  $('profSeg').textContent = `${SEGMENT[c]} · ${rs.length} records in the current filter`;
+  const kp = $('kpis'); kp.innerHTML = '';
+  REAL.forEach(m => {
+    const v = summarise(rs, m.key, state.agg), all = summarise(list, m.key, state.agg);
+    let delta = '';
+    if (v != null && all) {
+      const p = (v / all - 1) * 100;
+      delta = `<em class="${p < 0 ? 'down' : ''}">${p >= 0 ? '+' : ''}${p.toFixed(0)}% vs all companies</em>`;
+    }
+    kp.appendChild(el('div', 'kpi', `<b>${fmt(v, m.key, true)}</b><span>${m.label}${m.unit === 'TB' ? ' (TB)' : ''}</span>${delta}`));
+  });
+
+  // cloud vs on-prem
+  const cl = summarise(rs, 'Cloud_Storage_TB', state.agg), op = summarise(rs, 'On_Premise_Storage_TB', state.agg);
+  const box = $('splitBox');
+  if (cl == null || op == null) box.innerHTML = '<p class="muted">Not enough cloud / on-premise records for this selection.</p>';
+  else {
+    const t = cl + op, pc = cl / t * 100;
+    box.innerHTML = `<div class="split-bar"><div class="s-cloud" style="width:${pc}%">${pc.toFixed(0)}%</div><div class="s-prem" style="width:${100 - pc}%">${(100 - pc).toFixed(0)}%</div></div>
+      <div class="legend"><span><i class="s-cloud"></i>Cloud ${fmt(cl, 'x')}</span><span><i class="s-prem"></i>On-premise ${fmt(op, 'x')}</span></div>
+      <p class="muted">${pc >= 50 ? c + ' keeps most of its storage in the cloud.' : c + ' still keeps most of its storage on-premise.'}</p>`;
+  }
+  renderTrend(c);
+}
+
+function renderTrend(c) {
+  const m = metricOf(state.metric);
+  $('trendTitle').textContent = `${c}: ${m.label.toLowerCase()} by quarter`;
+  const base = DATA.filter(r => state.source === 'all' || r.Source_Note === state.source);
+  const pts = [1, 2, 3, 4].map(q => valueFor(base.filter(r => r.Company === c && quarterOf(r.Report_Date) === q), state.metric, state.agg));
+  const ref = [1, 2, 3, 4].map(q => valueFor(base.filter(r => quarterOf(r.Report_Date) === q), state.metric, state.agg));
+  const all = pts.concat(ref).filter(v => v != null);
+  const W = 460, H = 240, L = 46, R = 20, T = 20, B = 36;
+  if (!all.length) { $('trendBox').innerHTML = '<p class="muted">No data.</p>'; return; }
+  const max = Math.max(...all) * 1.12, min = 0;
+  const x = i => L + i * (W - L - R) / 3, y = v => T + (1 - (v - min) / (max - min)) * (H - T - B);
+  const path = arr => { let d = '', pen = false; arr.forEach((v, i) => { if (v == null) { pen = false; return; } d += (pen ? 'L' : 'M') + x(i) + ' ' + y(v); pen = true; }); return d; };
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Quarterly trend for ${c}">`;
+  for (let g = 0; g <= 3; g++) {
+    const v = max * g / 3, yy = y(v);
+    s += `<line class="gl" x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}"/><text x="${L - 6}" y="${yy + 4}" text-anchor="end">${compact(v, state.metric)}</text>`;
+  }
+  ['Q1', 'Q2', 'Q3', 'Q4'].forEach((q, i) => s += `<text x="${x(i)}" y="${H - 12}" text-anchor="middle">${q}</text>`);
+  s += `<path class="ref" d="${path(ref)}"/><path class="line" d="${path(pts)}"/>`;
+  pts.forEach((v, i) => { if (v != null) s += `<circle cx="${x(i)}" cy="${y(v)}" r="5"><title>${c} Q${i + 1}: ${fmt(v, state.metric)}</title></circle><text class="val" x="${x(i)}" y="${y(v) - 11}" text-anchor="middle">${compact(v, state.metric)}</text>`; });
+  s += '</svg><div class="legend"><span><i style="background:var(--cobalt)"></i>' + c + '</span><span><i style="background:var(--muted)"></i>All companies</span></div>';
+  $('trendBox').innerHTML = `<div class="trend">${s}</div>`;
+}
+function compact(v, key) {
+  if (key === 'Monthly_Cloud_Cost_USD') return '$' + (v / 1e6).toFixed(1) + 'M';
+  if (v >= 1e5) return Math.round(v / 1000) + 'k';
+  if (v >= 1000) return (v / 1000).toFixed(1) + 'k';
+  return Math.round(v).toString();
+}
+
+/* ---------- compare ---------- */
+function renderCompare() {
+  const list = rows(), A = state.a, B = state.b, box = $('cmpBox'); box.innerHTML = '';
+  const ra = list.filter(r => r.Company === A), rb = list.filter(r => r.Company === B);
+  let winsA = 0, winsB = 0;
+  METRICS.forEach(m => {
+    const va = valueFor(ra, m.key, state.agg), vb = valueFor(rb, m.key, state.agg);
+    const max = Math.max(va || 0, vb || 0, 1);
+    const lead = va != null && vb != null ? (va > vb ? 'a' : vb > va ? 'b' : '') : '';
+    if (m.key !== 'combo') { if (lead === 'a') winsA++; if (lead === 'b') winsB++; }
+    const row = el('div', 'cmp-row', `<b>${m.label}</b><div class="cmp-bars">
+      <div class="cb a ${lead === 'a' ? 'lead' : ''}"><span class="track"><span class="fill" style="width:${(va || 0) / max * 100}%"></span></span><span>${fmt(va, m.key, true)}</span></div>
+      <div class="cb b ${lead === 'b' ? 'lead' : ''}"><span class="track"><span class="fill" style="width:${(vb || 0) / max * 100}%"></span></span><span>${fmt(vb, m.key, true)}</span></div></div>`);
+    box.appendChild(row);
+  });
+  const ca = valueFor(ra, 'combo', state.agg), cb = valueFor(rb, 'combo', state.agg);
+  let msg = '';
+  if (A === B) msg = 'Pick two different companies to compare.';
+  else if (ca != null && cb != null) {
+    const w = ca >= cb ? A : B, l = ca >= cb ? B : A, p = (Math.max(ca, cb) / Math.min(ca, cb) - 1) * 100;
+    msg = `<strong>${w}</strong> handles more data overall (stored + processed), about ${p.toFixed(1)}% more than ${l}. Across the seven separate measures, ${A} leads on ${winsA} and ${B} on ${winsB}.`;
+  } else msg = 'One of these companies has no stored/processed figures in the current filter.';
+  box.appendChild(el('p', 'verdict', msg));
+  box.insertBefore(el('div', 'legend', `<span><i style="background:var(--cobalt)"></i>${A}</span><span><i style="background:var(--teal)"></i>${B}</span>`), box.firstChild);
+}
+
+/* ---------- table ---------- */
+const COLS = [
+  ['Record_ID', 'ID'], ['Company', 'Company'], ['Industry_Segment', 'Segment'], ['Report_Date', 'Date'],
+  ['Data_Stored_TB', 'Stored TB'], ['Data_Processed_TB', 'Processed TB'], ['Cloud_Storage_TB', 'Cloud TB'],
+  ['On_Premise_Storage_TB', 'On-prem TB'], ['Monthly_Cloud_Cost_USD', 'Cloud cost $/mo'], ['Employees', 'Employees'], ['Data_Center_Regions', 'Regions']
+];
+function renderTable() {
+  const q = state.search.trim().toLowerCase();
+  let rs = rows().filter(r => !q || (r.Company + ' ' + r.Industry_Segment + ' ' + r.Record_ID).toLowerCase().includes(q));
+  const {key, dir} = state.sort;
+  rs = rs.slice().sort((a, b) => {
+    const x = a[key], y = b[key];
+    if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1;
+    return (x > y ? 1 : x < y ? -1 : 0) * dir;
+  });
+  $('recCount').textContent = `${rs.length} of ${DATA.length} records shown. Blank cells were missing in the source and are left empty, not guessed.`;
+  const head = $('tbl').tHead; head.innerHTML = '';
+  const tr = el('tr');
+  COLS.forEach(([k, label]) => {
+    const th = el('th', '', label); th.tabIndex = 0; th.scope = 'col';
+    if (k === key) th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
+    const go = () => { state.sort = {key: k, dir: k === key ? -dir : 1}; renderTable(); };
+    th.onclick = go; th.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } };
+    tr.appendChild(th);
+  });
+  head.appendChild(tr);
+  const body = $('tbl').tBodies[0]; body.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  rs.forEach(r => {
+    const t = el('tr');
+    COLS.forEach(([k]) => {
+      const v = r[k], td = el('td');
+      if (v == null) { td.textContent = '–'; td.className = 'nil'; }
+      else td.textContent = typeof v === 'number' ? (k === 'Monthly_Cloud_Cost_USD' || k.endsWith('_TB') ? v.toLocaleString('en-US', {maximumFractionDigits: 2}) : v.toLocaleString('en-US')) : v;
+      t.appendChild(td);
+    });
+    frag.appendChild(t);
+  });
+  body.appendChild(frag);
+}
+
+/* ---------- coverage ---------- */
+function renderCoverage() {
+  const list = rows(), box = $('coverBox'); box.innerHTML = '';
+  REAL.forEach(m => {
+    const p = list.length ? countFor(list, m.key) / list.length * 100 : 0;
+    box.appendChild(el('div', 'cv', `<b><span>${m.label}</span><span>${p.toFixed(0)}%</span></b><span class="track"><span class="fill" style="width:${p}%"></span></span>`));
+  });
+}
+
+/* ---------- wiring ---------- */
+function renderAll() {
+  document.querySelectorAll('#metricChips .chip').forEach(c => c.setAttribute('aria-checked', c.dataset.key === state.metric));
+  document.querySelectorAll('#aggSeg button').forEach(b => b.setAttribute('aria-checked', b.dataset.agg === state.agg));
+  $('quarterSel').value = state.quarter; $('sourceSel').value = state.source;
+  $('companySel').value = state.company; $('cmpA').value = state.a; $('cmpB').value = state.b;
+  $('search').value = state.search;
+  renderRank(); renderProfile(); renderCompare(); renderTable(); renderCoverage();
+}
+function init() {
+  METRICS.forEach(m => {
+    const b = el('button', 'chip', m.label); b.type = 'button'; b.setAttribute('role', 'radio'); b.dataset.key = m.key;
+    b.onclick = () => { state.metric = m.key; renderAll(); }; $('metricChips').appendChild(b);
+  });
+  document.querySelectorAll('#aggSeg button').forEach(b => b.onclick = () => { state.agg = b.dataset.agg; renderAll(); });
+  $('sourceSel').innerHTML = '<option value="all">All sources</option>' + SOURCES.map(s => `<option>${s}</option>`).join('');
+  const opts = COMPANIES.map(c => `<option>${c}</option>`).join('');
+  ['companySel', 'cmpA', 'cmpB'].forEach(id => $(id).innerHTML = opts);
+  $('quarterSel').onchange = e => { state.quarter = e.target.value; renderAll(); };
+  $('sourceSel').onchange = e => { state.source = e.target.value; renderAll(); };
+  $('companySel').onchange = e => { state.company = e.target.value; renderAll(); };
+  $('cmpA').onchange = e => { state.a = e.target.value; renderAll(); };
+  $('cmpB').onchange = e => { state.b = e.target.value; renderAll(); };
+  $('search').oninput = e => { state.search = e.target.value; renderTable(); };
+  $('resetBtn').onclick = () => { Object.assign(state, JSON.parse(JSON.stringify(DEFAULTS))); setDefaults(); renderAll(); };
+  setDefaults();
+  window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(renderRank, 150); });
+  renderAll();
+}
+function setDefaults() {
+  const top = ranking().out[0].c;
+  state.company = top;
+  state.a = top; state.b = ranking().out[1].c;
+}
+init();
+
+</script>
+</body>
+</html>

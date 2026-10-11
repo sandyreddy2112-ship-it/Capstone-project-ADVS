@@ -1,0 +1,241 @@
+Record_ID,Company,Industry_Segment,Report_Date,Data_Stored_TB,Data_Processed_TB,Cloud_Storage_TB,On_Premise_Storage_TB,Monthly_Cloud_Cost_USD,Employees,Data_Center_Regions,Source_Note
+REC-0001,Amazon,Cloud & E-commerce,2025-01-13,6699.8,unknown,,279.08,243301.15,137475.0,unknown,
+REC-0002,Salesforce,Cloud Software,2025-08-03,N/A,1983.43,,661.64,confidential,99104.0,40,
+REC-0003,NVIDIA,AI & Computing,2025-10-02,,unknown,,1740.51,confidential,25916.0,26,Analyst estimate
+REC-0004,IBM,Enterprise IT,2025-03-25,3394.61,unknown,,1912.24,confidential,,unknown,Industry estimate
+REC-0005,Microsoft,Cloud & Software,2025-04-28,,unknown,,not reported,confidential,,36,
+REC-0006,Cisco,Networking,2025-08-08,,2565.88,3081.68,2272.23,,115666.0,unknown,Analyst estimate
+REC-0007,Salesforce,Cloud Software,2025-05-09,8742.6,unknown,,1033.72,,193659.0,unknown,Annual report
+REC-0008,Apple,Consumer Technology,2025-11-24,4618.2,unknown,,1804.85,confidential,223016.0,17,
+REC-0009,Amazon,Cloud & E-commerce,2025-02-13,6613.98,6846.99,,not reported,confidential,,21,
+REC-0010,IBM,Enterprise IT,2025-08-13,,1611.65,,705.74,1772523.96,65015.0,unknown,Company blog
+REC-0011,Apple,Consumer Technology,2025-12-09,N/A,unknown,3478.46,2358.17,,97876.0,unknown,Annual report
+REC-0012,Amazon,Cloud & E-commerce,2025-02-01,,5614.12,,566.79,632018.06,,unknown,
+REC-0013,Microsoft,Cloud & Software,2025-02-17,8344.67,1205.86,5194.67,26.42,confidential,,37,Company blog
+REC-0014,Apple,Consumer Technology,2025-04-22,N/A,473.66,,not reported,,26000.0,6,
+REC-0015,Meta,Social Media,2025-07-26,N/A,unknown,,1577.89,,67570.0,unknown,
+REC-0016,Apple,Consumer Technology,2025-08-23,2913.98,unknown,5976.77,1622.15,2333815.85,69037.0,12,
+REC-0017,Apple,Consumer Technology,2025-11-10,N/A,unknown,,2636.82,297417.39,199620.0,unknown,Company blog
+REC-0018,IBM,Enterprise IT,2025-04-15,,3562.59,,151.38,,,unknown,Analyst estimate
+REC-0019,Salesforce,Cloud Software,2025-01-05,N/A,3841.85,3515.93,144.65,2248463.91,240647.0,8,
+REC-0020,Oracle,Enterprise Software,2025-11-14,6770.35,6059.01,5294.43,2774.97,,70055.0,8,Annual report
+REC-0021,NVIDIA,AI & Computing,2025-04-24,,2480.13,,595.53,confidential,,36,Annual report
+REC-0022,Amazon,Cloud & E-commerce,2025-05-14,,4196.17,,1320.45,,54828.0,unknown,
+REC-0023,Meta,Social Media,2025-07-06,N/A,unknown,,not reported,confidential,,14,
+REC-0024,Oracle,Enterprise Software,2025-12-13,6758.4,unknown,,not reported,confidential,120811.0,34,
+REC-0025,Google,Search & Cloud,2025-12-04,N/A,4663.78,4919.62,2024.93,376911.37,,31,
+REC-0026,Cisco,Networking,2025-04-10,,unknown,4141.35,not reported,1299714.8,151120.0,10,
+REC-0027,Salesforce,Cloud Software,2025-10-14,,unknown,,494.29,1130673.7,172159.0,unknown,Company blog
+REC-0028,Apple,Consumer Technology,2025-08-14,,unknown,529.44,not reported,confidential,,31,Company blog
+REC-0029,Oracle,Enterprise Software,2025-07-19,N/A,unknown,2313.27,909.87,confidential,,36,Analyst estimate
+REC-0030,Meta,Social Media,2025-05-20,3978.94,4698.67,,not reported,confidential,,unknown,Analyst estimate
+REC-0031,Google,Search & Cloud,2025-08-25,,1521.04,,2854.59,638156.11,,5,Company blog
+REC-0032,Amazon,Cloud & E-commerce,2025-11-30,458.3,6649.8,3746.95,not reported,confidential,72172.0,unknown,
+REC-0033,Amazon,Cloud & E-commerce,2025-03-25,8686.01,unknown,,1202.03,,,21,
+REC-0034,Microsoft,Cloud & Software,2025-06-27,N/A,3566.43,,334.51,confidential,45105.0,unknown,Industry estimate
+REC-0035,Cisco,Networking,2025-10-03,,5130.63,1967.71,278.26,confidential,,26,Analyst estimate
+REC-0036,IBM,Enterprise IT,2025-04-04,,unknown,,1676.26,,,unknown,
+REC-0037,NVIDIA,AI & Computing,2025-08-18,7157.1,2094.94,,1669.35,,91714.0,19,Industry estimate
+REC-0038,Meta,Social Media,2025-03-03,,unknown,1151.64,not reported,,161445.0,14,Industry estimate
+REC-0039,Google,Search & Cloud,2025-06-04,N/A,929.75,,1920.85,265443.24,79537.0,30,Company blog
+REC-0040,Microsoft,Cloud & Software,2025-05-10,,504.14,,not reported,2373322.85,,unknown,
+REC-0041,Meta,Social Media,2025-09-25,,4140.25,,199.49,2369499.6,60318.0,7,Company blog
+REC-0042,Salesforce,Cloud Software,2025-02-08,,4176.99,,2114.9,187237.6,,14,Annual report
+REC-0043,Salesforce,Cloud Software,2025-04-26,,5795.09,,1716.24,confidential,,unknown,
+REC-0044,NVIDIA,AI & Computing,2025-08-13,815.93,unknown,1539.69,not reported,1471936.1,181234.0,38,Analyst estimate
+REC-0045,Salesforce,Cloud Software,2025-11-30,,unknown,4894.76,1236.88,1678632.44,,unknown,Analyst estimate
+REC-0046,Salesforce,Cloud Software,2025-01-19,,855.66,5196.22,1636.93,,168219.0,30,Industry estimate
+REC-0047,Salesforce,Cloud Software,2025-03-09,,6171.88,,2135.15,,111952.0,9,
+REC-0048,Google,Search & Cloud,2025-09-13,,1950.3,5882.46,1381.22,,200636.0,19,Industry estimate
+REC-0049,Salesforce,Cloud Software,2025-05-17,,unknown,,1350.71,,147456.0,31,
+REC-0050,Meta,Social Media,2025-10-20,,unknown,,not reported,confidential,,39,Analyst estimate
+REC-0051,Amazon,Cloud & E-commerce,2025-09-27,8202.93,unknown,5821.24,2908.23,confidential,26054.0,26,
+REC-0052,NVIDIA,AI & Computing,2025-10-05,419.5,4806.58,,not reported,1762688.17,,21,Industry estimate
+REC-0053,Microsoft,Cloud & Software,2025-05-31,,unknown,4106.71,255.33,1553078.82,,16,
+REC-0054,Apple,Consumer Technology,2025-08-24,2372.41,3283.51,4081.78,not reported,confidential,70561.0,14,Analyst estimate
+REC-0055,Amazon,Cloud & E-commerce,2025-05-02,,6949.21,,not reported,1947995.92,,33,
+REC-0056,IBM,Enterprise IT,2025-04-23,N/A,unknown,4101.09,not reported,confidential,156931.0,7,Industry estimate
+REC-0057,Oracle,Enterprise Software,2025-03-31,N/A,unknown,5485.25,2477.58,confidential,233169.0,9,Company blog
+REC-0058,Meta,Social Media,2025-12-13,,5641.88,,1618.99,,,26,
+REC-0059,Meta,Social Media,2025-08-30,N/A,unknown,,920.53,300523.08,84787.0,9,
+REC-0060,Google,Search & Cloud,2025-07-18,N/A,unknown,,not reported,confidential,111985.0,4,Analyst estimate
+REC-0061,NVIDIA,AI & Computing,2025-05-01,7713.51,unknown,,2905.26,238266.83,,5,Company blog
+REC-0062,Google,Search & Cloud,2025-10-17,N/A,1489.74,2004.93,1796.03,2147431.25,146614.0,unknown,Annual report
+REC-0063,Google,Search & Cloud,2025-01-08,3288.36,159.68,,1274.46,confidential,139542.0,30,
+REC-0064,Microsoft,Cloud & Software,2025-12-04,,266.5,,1481.0,192991.88,89439.0,10,
+REC-0065,Cisco,Networking,2025-10-08,,3737.37,,not reported,,193963.0,29,Analyst estimate
+REC-0066,IBM,Enterprise IT,2025-08-21,N/A,unknown,1566.59,2066.73,2081112.0,,unknown,Annual report
+REC-0067,Cisco,Networking,2025-10-15,N/A,unknown,,2168.76,confidential,,unknown,Analyst estimate
+REC-0068,Meta,Social Media,2025-02-25,N/A,unknown,,not reported,,,19,Industry estimate
+REC-0069,Apple,Consumer Technology,2025-06-23,3224.11,3985.93,,not reported,confidential,123920.0,25,
+REC-0070,IBM,Enterprise IT,2025-10-18,5406.39,1131.28,,not reported,confidential,,24,Annual report
+REC-0071,Apple,Consumer Technology,2025-12-14,,3712.19,,183.25,confidential,80876.0,unknown,Analyst estimate
+REC-0072,Google,Search & Cloud,2025-03-08,N/A,unknown,4846.89,2231.28,56666.43,,38,
+REC-0073,Oracle,Enterprise Software,2025-05-29,1125.04,unknown,,2760.91,,109975.0,unknown,Industry estimate
+REC-0074,Meta,Social Media,2025-06-20,7034.15,unknown,,not reported,2039442.14,43389.0,unknown,Company blog
+REC-0075,Amazon,Cloud & E-commerce,2025-04-01,N/A,unknown,,2959.87,,44572.0,32,
+REC-0076,Apple,Consumer Technology,2025-05-21,,2207.33,,2498.46,,,4,
+REC-0077,Meta,Social Media,2025-06-14,N/A,1098.48,,not reported,439671.69,119755.0,unknown,Company blog
+REC-0078,IBM,Enterprise IT,2025-07-10,,unknown,,1948.97,confidential,,11,Annual report
+REC-0079,Cisco,Networking,2025-12-06,,unknown,,not reported,confidential,,unknown,
+REC-0080,Oracle,Enterprise Software,2025-09-18,,6660.63,,592.18,202141.06,,unknown,Industry estimate
+REC-0081,Cisco,Networking,2025-03-09,5415.49,unknown,4863.81,150.2,1694143.68,165063.0,unknown,Company blog
+REC-0082,Apple,Consumer Technology,2025-08-29,8145.37,6632.55,,1518.66,2416007.7,215045.0,unknown,Analyst estimate
+REC-0083,IBM,Enterprise IT,2025-10-11,N/A,5965.6,549.06,832.92,2079306.33,63205.0,3,Annual report
+REC-0084,Oracle,Enterprise Software,2025-09-15,,6961.95,1946.18,2520.75,confidential,222517.0,32,
+REC-0085,Microsoft,Cloud & Software,2025-02-10,269.13,unknown,,878.54,313402.38,,31,Analyst estimate
+REC-0086,Cisco,Networking,2025-10-02,N/A,5043.88,,1071.39,1664284.54,142228.0,unknown,
+REC-0087,Salesforce,Cloud Software,2025-01-11,,2738.83,1559.22,1084.14,,,23,Industry estimate
+REC-0088,Salesforce,Cloud Software,2025-06-23,7340.23,unknown,2897.26,208.04,102089.64,16483.0,22,
+REC-0089,Oracle,Enterprise Software,2025-10-06,4313.26,1378.17,5179.72,2600.08,confidential,,26,Company blog
+REC-0090,NVIDIA,AI & Computing,2025-12-21,N/A,624.15,,557.76,809816.46,178256.0,unknown,
+REC-0091,Oracle,Enterprise Software,2025-03-27,,5101.36,,838.17,,,12,
+REC-0092,NVIDIA,AI & Computing,2025-01-18,1223.45,2595.98,5699.33,2043.6,936313.31,,27,
+REC-0093,Apple,Consumer Technology,2025-05-08,8648.63,3518.36,5485.58,795.66,,186922.0,14,Annual report
+REC-0094,NVIDIA,AI & Computing,2025-03-30,,5683.07,,1635.67,,,unknown,Company blog
+REC-0095,Amazon,Cloud & E-commerce,2025-04-13,7149.38,unknown,,not reported,2211773.65,,35,Analyst estimate
+REC-0096,Cisco,Networking,2025-02-07,,unknown,3128.29,not reported,1473587.12,118408.0,9,Industry estimate
+REC-0097,Google,Search & Cloud,2025-03-24,N/A,unknown,5374.81,not reported,,,unknown,Company blog
+REC-0098,Cisco,Networking,2025-10-25,N/A,6318.91,,142.76,,156197.0,38,
+REC-0099,Microsoft,Cloud & Software,2025-09-12,N/A,6698.72,,not reported,confidential,131943.0,unknown,Company blog
+REC-0100,IBM,Enterprise IT,2025-06-13,,958.82,3114.13,1410.09,1129494.07,18265.0,26,Company blog
+REC-0101,IBM,Enterprise IT,2025-10-23,6518.04,unknown,,288.35,1268556.71,157920.0,5,Analyst estimate
+REC-0102,Cisco,Networking,2025-12-01,,5937.85,,2296.29,122653.56,154495.0,37,Annual report
+REC-0103,Oracle,Enterprise Software,2025-09-16,N/A,unknown,3685.71,1193.83,confidential,202909.0,34,
+REC-0104,Microsoft,Cloud & Software,2025-01-24,N/A,3342.52,,2795.48,,225883.0,unknown,
+REC-0105,Salesforce,Cloud Software,2025-09-08,,165.63,,not reported,,161476.0,unknown,Company blog
+REC-0106,Microsoft,Cloud & Software,2025-10-26,N/A,4357.16,,not reported,283639.85,87232.0,unknown,Company blog
+REC-0107,Oracle,Enterprise Software,2025-09-14,,6116.08,,not reported,confidential,50398.0,unknown,Industry estimate
+REC-0108,Apple,Consumer Technology,2025-11-09,4409.2,2124.57,,2120.87,,,19,
+REC-0109,Salesforce,Cloud Software,2025-07-14,,5737.72,,255.51,,130587.0,unknown,
+REC-0110,Apple,Consumer Technology,2025-03-12,N/A,unknown,5435.85,176.42,confidential,31357.0,2,Analyst estimate
+REC-0111,NVIDIA,AI & Computing,2025-09-02,,2282.12,3931.18,1614.75,2283942.02,114546.0,27,Company blog
+REC-0112,Apple,Consumer Technology,2025-01-20,N/A,6502.76,,1639.04,confidential,76522.0,unknown,Analyst estimate
+REC-0113,Apple,Consumer Technology,2025-04-06,,5545.84,,not reported,confidential,180441.0,32,Company blog
+REC-0114,Microsoft,Cloud & Software,2025-05-14,,6680.54,,not reported,,127000.0,unknown,
+REC-0115,Apple,Consumer Technology,2025-12-20,,2604.43,,1825.1,confidential,,unknown,
+REC-0116,Amazon,Cloud & E-commerce,2025-09-27,N/A,2564.4,,not reported,confidential,141404.0,unknown,
+REC-0117,NVIDIA,AI & Computing,2025-02-16,,unknown,,1397.89,confidential,71704.0,15,Annual report
+REC-0118,Oracle,Enterprise Software,2025-06-26,N/A,6959.16,,114.57,,115195.0,30,Analyst estimate
+REC-0119,Amazon,Cloud & E-commerce,2025-12-16,N/A,974.28,,1191.31,2088705.81,,unknown,Analyst estimate
+REC-0120,Meta,Social Media,2025-05-07,4199.56,unknown,4604.67,2432.24,609259.07,31449.0,unknown,
+REC-0121,Microsoft,Cloud & Software,2025-05-06,,3100.79,,not reported,,181300.0,17,
+REC-0122,Salesforce,Cloud Software,2025-04-24,,unknown,,2042.68,,,28,Company blog
+REC-0123,Apple,Consumer Technology,2025-07-12,N/A,5952.92,5152.37,not reported,confidential,151089.0,17,Company blog
+REC-0124,IBM,Enterprise IT,2025-11-28,,unknown,4984.97,not reported,108473.41,,15,Company blog
+REC-0125,IBM,Enterprise IT,2025-06-05,8617.48,unknown,,not reported,519237.73,89309.0,unknown,
+REC-0126,IBM,Enterprise IT,2025-06-07,N/A,unknown,,1124.7,123831.47,199314.0,unknown,
+REC-0127,Oracle,Enterprise Software,2025-06-01,,1648.63,,1025.94,,133606.0,12,Company blog
+REC-0128,Salesforce,Cloud Software,2025-09-08,N/A,unknown,251.25,2836.66,,,11,
+REC-0129,NVIDIA,AI & Computing,2025-07-11,N/A,4334.81,3972.74,39.7,,145440.0,unknown,
+REC-0130,Oracle,Enterprise Software,2025-04-02,1052.45,unknown,,1202.75,confidential,,unknown,Annual report
+REC-0131,Microsoft,Cloud & Software,2025-02-17,,3891.28,4231.93,1313.05,1418983.0,239564.0,unknown,
+REC-0132,NVIDIA,AI & Computing,2025-05-19,514.4,unknown,3402.88,554.48,,,6,Company blog
+REC-0133,Cisco,Networking,2025-05-04,,3806.91,4545.88,2375.68,confidential,30607.0,6,
+REC-0134,Cisco,Networking,2025-11-01,,1949.62,,1668.05,,,unknown,Annual report
+REC-0135,Amazon,Cloud & E-commerce,2025-05-18,N/A,1122.22,1934.24,2830.02,confidential,31799.0,29,
+REC-0136,Salesforce,Cloud Software,2025-09-20,3731.59,unknown,,56.78,975620.9,,unknown,Company blog
+REC-0137,Oracle,Enterprise Software,2025-03-28,,1915.43,,2352.35,636732.35,168848.0,14,Annual report
+REC-0138,Google,Search & Cloud,2025-06-05,,4360.34,,not reported,confidential,163128.0,32,Analyst estimate
+REC-0139,IBM,Enterprise IT,2025-05-30,N/A,3462.5,,2453.15,2330847.21,160248.0,unknown,Analyst estimate
+REC-0140,Meta,Social Media,2025-08-13,N/A,5942.13,4054.22,not reported,confidential,211851.0,40,
+REC-0141,Oracle,Enterprise Software,2025-10-01,N/A,305.52,,1789.58,,179245.0,unknown,
+REC-0142,Oracle,Enterprise Software,2025-06-19,,786.31,,1682.82,confidential,,39,Industry estimate
+REC-0143,Microsoft,Cloud & Software,2025-09-05,,unknown,,not reported,confidential,,30,Industry estimate
+REC-0144,Microsoft,Cloud & Software,2025-12-30,,4553.39,,746.86,confidential,65779.0,unknown,
+REC-0145,Oracle,Enterprise Software,2025-07-22,N/A,3174.55,,not reported,2023737.17,,25,Company blog
+REC-0146,NVIDIA,AI & Computing,2025-02-28,,unknown,,1056.82,,214875.0,unknown,Company blog
+REC-0147,IBM,Enterprise IT,2025-03-02,2223.3,unknown,,430.84,,,13,Analyst estimate
+REC-0148,Apple,Consumer Technology,2025-03-13,,4354.9,2933.42,not reported,confidential,133902.0,30,Annual report
+REC-0149,Cisco,Networking,2025-01-16,7183.34,unknown,,2322.19,1378818.2,34938.0,unknown,Annual report
+REC-0150,NVIDIA,AI & Computing,2025-10-07,,761.79,1821.37,1360.2,1103284.06,208327.0,unknown,Industry estimate
+REC-0151,Cisco,Networking,2025-11-20,N/A,1017.68,,not reported,,,unknown,Annual report
+REC-0152,Google,Search & Cloud,2025-07-30,,6075.98,,not reported,987824.87,170780.0,26,Annual report
+REC-0153,Amazon,Cloud & E-commerce,2025-07-26,,6147.36,,not reported,confidential,,unknown,Analyst estimate
+REC-0154,Meta,Social Media,2025-08-08,,5806.99,3306.5,1466.31,2236445.1,,31,Company blog
+REC-0155,NVIDIA,AI & Computing,2025-08-22,,1456.11,,2799.52,confidential,26606.0,5,
+REC-0156,Apple,Consumer Technology,2025-12-25,,4605.62,1319.86,not reported,1118216.52,187346.0,10,Annual report
+REC-0157,Meta,Social Media,2025-07-16,895.05,2604.55,865.92,1931.9,1330965.61,164991.0,unknown,Company blog
+REC-0158,Google,Search & Cloud,2025-07-30,,6026.74,883.08,1164.42,793114.13,,unknown,
+REC-0159,Cisco,Networking,2025-11-08,N/A,5937.14,,2248.57,1618962.74,134731.0,unknown,
+REC-0160,Amazon,Cloud & E-commerce,2025-09-28,8009.65,6908.83,,1274.17,1909187.59,9375.0,2,Annual report
+REC-0161,Microsoft,Cloud & Software,2025-07-23,N/A,5381.41,4225.77,1928.8,confidential,25715.0,36,Analyst estimate
+REC-0162,Cisco,Networking,2025-11-21,N/A,unknown,2653.04,276.91,,19425.0,13,
+REC-0163,Google,Search & Cloud,2025-12-26,,unknown,,2347.75,1835010.24,207225.0,29,
+REC-0164,Amazon,Cloud & E-commerce,2025-05-15,N/A,unknown,,2580.89,645239.04,,unknown,
+REC-0165,Microsoft,Cloud & Software,2025-01-23,7742.33,3328.76,5525.35,not reported,,176888.0,16,Analyst estimate
+REC-0166,IBM,Enterprise IT,2025-05-19,N/A,2641.02,,2944.61,confidential,226471.0,unknown,Analyst estimate
+REC-0167,Microsoft,Cloud & Software,2025-07-08,N/A,5502.33,,2916.14,,204355.0,2,Annual report
+REC-0168,Meta,Social Media,2025-10-05,N/A,6146.53,,2550.04,520933.99,115052.0,11,Annual report
+REC-0169,Meta,Social Media,2025-09-24,,unknown,618.68,not reported,confidential,178655.0,18,Analyst estimate
+REC-0170,IBM,Enterprise IT,2025-06-12,4129.54,unknown,698.39,1408.84,confidential,59430.0,31,Annual report
+REC-0171,Amazon,Cloud & E-commerce,2025-03-22,,5793.39,,2139.25,996648.71,83339.0,3,Analyst estimate
+REC-0172,Salesforce,Cloud Software,2025-10-09,,758.26,121.14,2474.55,,,18,Annual report
+REC-0173,Meta,Social Media,2025-11-27,4046.54,5938.56,,2773.91,confidential,12728.0,13,Company blog
+REC-0174,Google,Search & Cloud,2025-05-21,2590.71,290.81,,1247.74,confidential,40975.0,unknown,
+REC-0175,Microsoft,Cloud & Software,2025-07-15,,5480.97,,978.38,804005.14,239819.0,unknown,Industry estimate
+REC-0176,Cisco,Networking,2025-04-30,8768.42,unknown,,186.61,confidential,98009.0,unknown,Industry estimate
+REC-0177,IBM,Enterprise IT,2025-10-30,N/A,2494.19,3400.5,2435.0,1359890.26,133564.0,unknown,Company blog
+REC-0178,Microsoft,Cloud & Software,2025-09-27,,6429.38,2077.52,2535.97,158294.35,158776.0,35,Annual report
+REC-0179,IBM,Enterprise IT,2025-12-27,,2389.1,861.89,not reported,,,37,
+REC-0180,Cisco,Networking,2025-03-31,N/A,unknown,,not reported,,,16,Analyst estimate
+REC-0181,Google,Search & Cloud,2025-06-19,6733.56,unknown,5317.66,not reported,confidential,7987.0,6,Industry estimate
+REC-0182,Amazon,Cloud & E-commerce,2025-01-01,,6785.26,,1138.54,,,12,Annual report
+REC-0183,Microsoft,Cloud & Software,2025-05-31,,6664.05,5333.19,2201.32,,,unknown,Company blog
+REC-0184,Cisco,Networking,2025-08-11,1498.22,6822.07,,not reported,710992.45,18011.0,37,Company blog
+REC-0185,Microsoft,Cloud & Software,2025-07-04,133.96,unknown,2907.95,529.08,confidential,35279.0,32,
+REC-0186,Apple,Consumer Technology,2025-02-16,,6204.17,1160.17,804.62,,,unknown,Industry estimate
+REC-0187,Salesforce,Cloud Software,2025-07-31,N/A,473.84,,2067.46,1436058.58,129849.0,unknown,
+REC-0188,Salesforce,Cloud Software,2025-10-20,N/A,6647.32,1078.63,2917.05,116262.99,184077.0,40,Industry estimate
+REC-0189,Amazon,Cloud & E-commerce,2025-02-14,,unknown,2776.04,not reported,1956397.3,113643.0,unknown,Annual report
+REC-0190,Amazon,Cloud & E-commerce,2025-10-16,,6166.94,,1467.04,confidential,,4,Industry estimate
+REC-0191,Meta,Social Media,2025-01-26,,190.62,,2577.54,,207907.0,unknown,
+REC-0192,Amazon,Cloud & E-commerce,2025-04-07,,5328.48,,not reported,1271920.24,,38,Company blog
+REC-0193,Meta,Social Media,2025-01-30,,401.39,,1525.28,1706124.16,,13,
+REC-0194,Salesforce,Cloud Software,2025-06-29,,4837.51,213.33,505.46,,64011.0,unknown,Annual report
+REC-0195,Microsoft,Cloud & Software,2025-08-31,N/A,1253.74,,2133.92,confidential,96412.0,15,Industry estimate
+REC-0196,Salesforce,Cloud Software,2025-11-16,3634.66,6996.03,,1834.97,confidential,172928.0,unknown,
+REC-0197,Apple,Consumer Technology,2025-04-07,1434.37,unknown,,not reported,confidential,242741.0,unknown,Annual report
+REC-0198,Cisco,Networking,2025-12-29,8953.31,unknown,,not reported,757485.12,,13,Analyst estimate
+REC-0199,Google,Search & Cloud,2025-05-13,N/A,unknown,,not reported,confidential,237480.0,unknown,Industry estimate
+REC-0200,NVIDIA,AI & Computing,2025-03-02,N/A,4105.84,2859.71,2605.14,confidential,19172.0,14,Analyst estimate
+REC-0201,Cisco,Networking,2025-08-23,N/A,611.64,3804.64,192.88,691084.38,156068.0,33,
+REC-0202,Oracle,Enterprise Software,2025-11-21,,6759.03,,61.95,,,2,
+REC-0203,IBM,Enterprise IT,2025-06-09,,3548.19,,not reported,confidential,,23,Industry estimate
+REC-0204,Meta,Social Media,2025-03-26,,182.92,1306.58,523.57,1780664.12,,unknown,Annual report
+REC-0205,Cisco,Networking,2025-01-25,N/A,5861.03,,not reported,,184762.0,unknown,Annual report
+REC-0206,Salesforce,Cloud Software,2025-05-19,N/A,1003.29,,370.85,,208937.0,14,
+REC-0207,Oracle,Enterprise Software,2025-06-01,N/A,1493.47,2017.09,57.99,,134526.0,unknown,
+REC-0208,Amazon,Cloud & E-commerce,2025-05-12,,2107.35,347.98,2559.7,confidential,116672.0,8,Company blog
+REC-0209,Google,Search & Cloud,2025-06-18,,unknown,,1214.32,confidential,227998.0,28,Company blog
+REC-0210,Microsoft,Cloud & Software,2025-03-23,N/A,4004.16,,not reported,,39250.0,9,Analyst estimate
+REC-0211,Microsoft,Cloud & Software,2025-02-02,,unknown,,not reported,,,unknown,
+REC-0212,Meta,Social Media,2025-09-04,N/A,unknown,,182.61,confidential,228312.0,33,Company blog
+REC-0213,IBM,Enterprise IT,2025-05-23,548.12,3875.94,,1355.33,1123199.62,,8,Analyst estimate
+REC-0214,Microsoft,Cloud & Software,2025-10-13,4986.98,unknown,,1970.7,confidential,221350.0,unknown,
+REC-0215,Cisco,Networking,2025-08-31,,unknown,,1908.31,confidential,189050.0,12,
+REC-0216,Oracle,Enterprise Software,2025-02-24,2363.17,6515.0,1332.76,341.14,,,30,
+REC-0217,Cisco,Networking,2025-09-16,,unknown,,1459.14,1732626.1,196494.0,unknown,
+REC-0218,Cisco,Networking,2025-06-14,,unknown,,1041.72,1137585.81,,unknown,
+REC-0219,IBM,Enterprise IT,2025-12-31,N/A,unknown,,not reported,1628715.11,,9,
+REC-0220,NVIDIA,AI & Computing,2025-10-26,N/A,unknown,,2428.75,958367.08,180703.0,12,
+REC-0221,Apple,Consumer Technology,2025-03-16,N/A,unknown,,not reported,1409093.61,,unknown,
+REC-0222,Apple,Consumer Technology,2025-12-21,,unknown,,180.33,confidential,,unknown,
+REC-0223,Cisco,Networking,2025-04-11,7007.71,unknown,493.09,2210.54,,74268.0,39,Industry estimate
+REC-0224,NVIDIA,AI & Computing,2025-12-30,8443.7,1118.24,,1992.43,,,22,Company blog
+REC-0225,Salesforce,Cloud Software,2025-02-04,7097.7,2940.72,2128.95,1006.58,,,unknown,Industry estimate
+REC-0226,NVIDIA,AI & Computing,2025-05-04,N/A,6434.32,,1156.49,,194785.0,unknown,
+REC-0227,NVIDIA,AI & Computing,2025-09-07,N/A,1387.96,,1608.95,1679134.46,184674.0,unknown,
+REC-0228,Oracle,Enterprise Software,2025-11-28,7369.11,1118.59,4315.37,181.72,,64675.0,26,
+REC-0229,Oracle,Enterprise Software,2025-08-10,,unknown,4335.7,not reported,confidential,248282.0,unknown,Annual report
+REC-0230,Apple,Consumer Technology,2025-08-13,N/A,264.19,,2551.41,2400734.32,,unknown,
+REC-0231,Google,Search & Cloud,2025-03-05,N/A,4196.75,,2229.46,,228204.0,12,
+REC-0232,Apple,Consumer Technology,2025-04-10,N/A,unknown,,2021.62,,132714.0,unknown,
+REC-0233,Meta,Social Media,2025-02-21,2637.72,2258.61,,not reported,confidential,117278.0,22,
+REC-0234,Oracle,Enterprise Software,2025-05-22,7576.98,2354.36,,2328.81,,225670.0,10,Industry estimate
+REC-0235,Amazon,Cloud & E-commerce,2025-02-08,N/A,unknown,,129.24,,128759.0,25,
+REC-0236,Apple,Consumer Technology,2025-03-10,N/A,679.35,,2058.8,1121088.91,,32,Annual report
+REC-0237,Meta,Social Media,2025-09-07,,2617.57,,1176.52,,,unknown,Industry estimate
+REC-0238,Cisco,Networking,2025-10-06,,unknown,5394.45,1559.66,confidential,232467.0,unknown,Annual report
+REC-0239,Salesforce,Cloud Software,2025-03-13,4015.1,585.76,943.93,1099.42,confidential,,unknown,Analyst estimate
+REC-0240,NVIDIA,AI & Computing,2025-04-18,N/A,5841.89,,500.16,2228086.2,48605.0,35,
